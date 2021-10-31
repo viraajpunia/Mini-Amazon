@@ -5,7 +5,7 @@ mybase=`dirname $mypath`
 cd $mybase
 
 source ../.flaskenv
-dbname=$DB_NAME
+dbname=amazon
 
 if [[ -n `psql -lqt | cut -d \| -f 1 | grep -w "$dbname"` ]]; then
     dropdb $dbname
