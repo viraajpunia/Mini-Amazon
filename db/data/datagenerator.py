@@ -5,7 +5,7 @@ import csv
 
 fake = Faker()
 
-def generate_users(n_users, num_sellers, products, orders):
+def generate_users(n_users, num_sellers, products, sells_products, orders):
 	'''
 	Generate data
 
@@ -13,6 +13,7 @@ def generate_users(n_users, num_sellers, products, orders):
 		n_users: number of users to generate
 		num_sellers: number of sellers to pick
 		products: number of products to generate
+		sells_products: number of seller-product pairs to generate
 		orders: number of orders to generate
 	'''
 
@@ -61,13 +62,13 @@ def generate_users(n_users, num_sellers, products, orders):
 
 	for i in range(0, products):
 		newprod = {}
-		pid = random.randint(0, products)
+		pid = i
 		newprod['product_id'] = pid
 		product_id_set.add(pid)
-		newprod['seller_id'] = random.choice(seller_list)
 		categories = ['a', 'b', 'c', 'd', 'e', 'f']
 		newprod['category'] = random.choice(categories)
-		newprod['descript'] = fake.text()
+		newprod['name'] = fake.word()
+		newprod['descrip'] = fake.text()
 		newprod['img_link'] = fake.image_url()
 		newprod['price'] = round(random.uniform(0, 3000), 2)
 		newprod['available'] = random.choice([True, False])
@@ -76,17 +77,38 @@ def generate_users(n_users, num_sellers, products, orders):
 	write_file(product_data, "Products.csv")
 
 
+	# Generate fake seller-product pairs
+	sells_product_data = []
+	sell_product_set = set()
+	product_id_set = list(product_id_set)
+	counter = 0
+	while counter <  sells_products:
+		new_sell_prod = {}
+		new_sell_prod['seller_id'] = random.choice(seller_list)
+		new_sell_prod['product_id'] = random.choice(product_id_set)
+		if (new_sell_prod['seller_id'], new_sell_prod['product_id']) not in sell_product_set:
+			sells_product_data.append(new_sell_prod)
+			sell_product_set.add((new_sell_prod['seller_id'], new_sell_prod['product_id']))
+			counter += 1
+
+	write_file(sells_product_data, "SellProducts.csv")
+
+
 	# Generate fake purchases
 	purchase_data = []
-	product_id_set = list(product_id_set)
+	sell_product_set = list(sell_product_set)
 	for i in range(0, orders):
 		neworder = {}
 		neworder['order_id'] = i
-		neworder['product_id'] = random.choice(product_id_set)
+		sp = random.choice(sell_product_set)
+		neworder['seller_id'] = sp[0]
+		neworder['product_id'] = sp[1]
 
 		timestamp = fake.date_time_this_month()
 		neworder['current_timestamp'] = timestamp.strftime('%Y-%m-%d %r')
-		#neworder['total_price']
+
+		neworder['uid'] = random.randint(0, n_users-1)
+
 		neworder['num_items'] = random.randint(1, 20)
 		neworder['fulfillment_status'] = random.choice(["Order received", "Shipped", "Delivered"])
 		purchase_data.append(neworder)
@@ -112,11 +134,12 @@ def write_file(dict_data, csv_file):
 
 
 def main():
-	n = 10
-	ns = 5
-	p = 10
-	o = 10
-	generate_users(n, ns, p, o)
+	n = 20
+	ns = 10
+	p = 20
+	sp = 20
+	o = 20
+	generate_users(n, ns, p, sp, o)
 
 main()
 
