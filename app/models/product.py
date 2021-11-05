@@ -2,17 +2,19 @@ from flask import current_app as app
 
 
 class Product:
-    def __init__(self, id, category, name, price, available):
+    def __init__(self, id, category, name, descrip, img_link, price, available):
         self.id = id
         self.category = category
         self.name = name
+        self.descrip = descrip
+        self.img_link = img_link
         self.price = price
         self.available = available
 
     @staticmethod
     def get(id):
         rows = app.db.execute('''
-SELECT product_id, category, name, price, available
+SELECT product_id, category, name, descrip, img_link, price, available
 FROM Products
 WHERE id = :id
 ''',
@@ -22,7 +24,7 @@ WHERE id = :id
     @staticmethod
     def get_all(available=True):
         rows = app.db.execute('''
-SELECT product_id, category, name, price, available
+SELECT product_id, category, name, descrip, img_link, price, available
 FROM Products
 WHERE available = :available
 ''',
@@ -32,7 +34,7 @@ WHERE available = :available
     @staticmethod
     def get_item(name):
         rows = app.db.execute('''
-SELECT product_id, category, name, price, available
+SELECT product_id, category, name, descrip, img_link, price, available
 FROM Products
 WHERE name = :name
 ''',
@@ -42,7 +44,7 @@ WHERE name = :name
     @staticmethod
     def get_category(category):
         rows = app.db.execute('''
-SELECT product_id, category, name, price, available
+SELECT product_id, category, name, descrip, img_link, price, available
 FROM Products
 WHERE category = :category
 ''',
@@ -52,7 +54,7 @@ WHERE category = :category
     @staticmethod
     def get_item_in_category(name, category):
         rows = app.db.execute('''
-SELECT product_id, category, name, price, available
+SELECT product_id, category, name, descrip, img_link, price, available
 FROM Products
 WHERE category = :category
 AND name = :name
