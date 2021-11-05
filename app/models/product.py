@@ -40,11 +40,26 @@ WHERE name = :name
         return [Product(*row) for row in rows]
 
     @staticmethod
-    def get_category(name):
+    def get_category(category):
         rows = app.db.execute('''
 SELECT product_id, category, name, price, available
 FROM Products
-WHERE name = :category
+WHERE category = :category
 ''',
-                              name=name)
+                              category=category)
         return [Product(*row) for row in rows]
+
+    @staticmethod
+    def get_item_in_category(name, category):
+        rows = app.db.execute('''
+SELECT product_id, category, name, price, available
+FROM Products
+WHERE category = :category
+AND name = :name
+''',
+                              name=name, category=category)
+        return [Product(*row) for row in rows]
+
+
+
+

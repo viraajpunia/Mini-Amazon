@@ -43,8 +43,23 @@
         color: #fff;
     }
 
+    .nozamabutton {
+      background-color: transparent;
+      background-repeat: no-repeat;
+      border: none;
+      cursor: pointer;
+      overflow: hidden;
+      color: aliceblue; 
+      padding-top: 10px;
+      padding-bottom: 10px;
+      padding-left: 30px;
+      padding-right: 30px;
+      font-size: 30px;
+      border: none;
+    }
+
     /* Dropdown Button */
-    .dropbtn {
+    .formbutton {
       background-color: #fff;
       color: black;
       padding-top: 10px;
@@ -119,30 +134,87 @@
       color: white;
     }
 
+    /* https://www.sliderrevolution.com/resources/css-select-styles/ */ 
+    select {
+      /* styling */
+      background-color: white;
+      border: none;
+      border-radius: 0px;
+      display: inline-block;
+      font: inherit;
+      line-height: 1.8em;
+      padding: 0.5em 3.5em 0.5em 1em;
+
+      /* reset */
+      margin: 0;      
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+
+      /* arrows */
+      background-image:
+        linear-gradient(45deg, transparent 50%, gray 50%),
+        linear-gradient(135deg, gray 50%, transparent 50%),
+        linear-gradient(to right, #ccc, #ccc);
+      background-position:
+        calc(100% - 20px) calc(1em + 2px),
+        calc(100% - 15px) calc(1em + 2px),
+        calc(100% - 2.5em) 0.5em;
+      background-size:
+        5px 5px,
+        5px 5px,
+        1px 1.5em;
+      background-repeat: no-repeat;
+    }
+
+    select:focus {
+      background-image:
+        linear-gradient(45deg, green 50%, transparent 50%),
+        linear-gradient(135deg, transparent 50%, green 50%),
+        linear-gradient(to right, #ccc, #ccc);
+      background-position:
+        calc(100% - 15px) 1em,
+        calc(100% - 20px) 1em,
+        calc(100% - 2.5em) 0.5em;
+      background-size:
+        5px 5px,
+        5px 5px,
+        1px 1.5em;
+      background-repeat: no-repeat;
+      border-color: green;
+      outline: 0;
+    }
+
+    select:-moz-focusring {
+      color: transparent;
+      text-shadow: 0 0 0 #000;
+    }
+
+
   </style>
 </head>
 
 <body>
   <div class="sidenav">
     {% block msg %}
-      <h1 style="color:aliceblue; padding-left: 30px; display: inline-block; margin-right: 10px">Nozama</h1>
+      <button class = "nozamabutton"> Nozama </button>
 
-      <form action= "/search">
-        <div class="dropdown">
-          <button class="dropbtn">All</button>
-          <div class="dropdown-content">
-            <p> A </p>
-            <p> B </p>
-            <p> C </p>
-            <p> D </p>
-            <p> E </p>
-            <p> F </p>
-          </div>
-        </div>
+      <form action= "/search" style="display: inline-block;">
+        <select id="categories" name="categories">
+          <option value="All">All</option>
+          <option value="a">A</option>
+          <option value="b">B</option>
+          <option value="c">C</option>
+          <option value="d">D</option>
+          <option value="e">E</option>
+          <option value="f">F</option>
+        </select>
 
         <input type="text" placeholder="Search.." name="item" />
 
-        <button class="dropbtn" type="submit">Search</button>
+        <button class="formbutton" type="submit">Search</button>
       </form>
       <button class="cart">Cart</button>
 

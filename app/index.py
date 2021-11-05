@@ -36,12 +36,24 @@ def index():
 @bp.route('/search', methods=['GET', 'POST'])
 def search():
     name = request.args.get("item")
+    category = request.args.get("categories")
     if name == "":
-        matches = Product.get_all(True)
+        if category == "All":
+            matches = Product.get_all(True)
+        else:
+            matches = Product.get_category(category)
     else:
-        matches = Product.get_item(name)
+        if category == "All":
+            matches = Product.get_item(name)
+        else:
+            matches = Product.get_item_in_category(name, category)
 
     return render_template('index.html',
                            avail_products=matches,
                            purchase_history=None)
+
+
+
+
+
 
