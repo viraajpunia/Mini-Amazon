@@ -43,6 +43,20 @@
         color: #fff;
     }
 
+    .btn-light {
+      background-color: #fff;
+      color: black;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      padding-left: 30px;
+      padding-right: 30px;
+      font-size: 17px;
+      border: none;
+      margin-right: 10px;
+      margin-top: 15px;
+      border-radius: 0px;
+    }
+
     .nozamabutton {
       background-color: transparent;
       background-repeat: no-repeat;
@@ -127,6 +141,9 @@
       font-size: 16px;
       border: none;
       cursor: pointer;
+      float: right;
+      margin-right: 10px;
+      margin-top: 15px;
     }
 
     .cart:hover {
@@ -218,7 +235,7 @@
       </form>
       <button class="cart">Cart</button>
 
-      <div style="color: aliceblue; padding-top: 10px; padding-bottom:10px; padding-left: 30px; padding-right: 30px; display: inline-block;">
+      <div style = "display: inline-block; float: right;">
         {% if current_user.is_authenticated %}
           Hello {{current_user.firstname}}! <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-light">Log out</a>
         {% else %}
