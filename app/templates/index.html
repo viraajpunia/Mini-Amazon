@@ -36,6 +36,9 @@
               <p style="text-align: center; font-size: 13px; position: relative; top: 80%;"> 
                 Category: {{product.category}} 
               </p>
+              <p style = "text-align: center; font-size: 15px; position: relative; top: 70%;">
+              	<a href="{{ url_for('index.moreInfo', variable=product.id) }}">More Info</a>
+              </p>
             </div>
           </div>
         </td>
