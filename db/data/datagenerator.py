@@ -5,7 +5,7 @@ import csv
 
 fake = Faker()
 
-def generate_users(n_users, num_sellers, products, sells_products, orders):
+def generate_users(n_users, num_sellers, products, sells_products, orders, n_carts, n_reviews, n_seller_reviews):
 	'''
 	Generate data
 
@@ -15,6 +15,9 @@ def generate_users(n_users, num_sellers, products, sells_products, orders):
 		products: number of products to generate
 		sells_products: number of seller-product pairs to generate
 		orders: number of orders to generate
+		n_carts: number of carts to generate
+		n_reviews: number of reviews to generate
+		n_seller_reviews: number of seller reviews to generate
 	'''
 
 	# Generate fake users and user accounts
@@ -116,6 +119,47 @@ def generate_users(n_users, num_sellers, products, sells_products, orders):
 	write_file(purchase_data, "Purchases.csv")
 
 
+	cart_data = []
+	for i in range(0, n_carts):
+		newcart = {}
+		newcart['uid'] = i
+		newcart['product_id'] = random.choice(product_id_set)
+		newcart['quantity'] = random.randint(1, 20)
+		cart_data.append(newcart)
+
+	write_file(cart_data, "Carts.csv")
+
+
+	feedback_data = []
+	for i in range(0, n_reviews):
+		newreview = {}
+		newreview['product_id'] = random.choice(product_id_set)
+		newreview['uid'] = i
+		newreview['rating'] = random.randint(1, 5)
+		newreview['review'] = fake.sentence
+
+		timestamp = fake.date_time_this_month()
+		newreview['date'] = timestamp.strftime('%Y-%m-%d %r')
+
+		feedback_data.append(newcart)
+
+	write_file(feedback_data, "Feedback.csv")
+
+
+	sellerReviews_data = []
+	for i in range(0, n_seller_reviews):
+		newsreview = {}
+		newsreview['uid'] = i
+		newsreview['review_id'] = random.randint(0, n_seller_reviews-1)
+		newsreview['review'] = fake.sentence
+
+		sellerReviews_data.append(newsreview)
+
+	write_file(sellerReviews_data, "SellerReviews.csv")
+
+
+
+
 def write_file(dict_data, csv_file):
 	"""
 	Writes a list of dictionaries to csv file.
@@ -139,7 +183,10 @@ def main():
 	p = 20
 	sp = 20
 	o = 20
-	generate_users(n, ns, p, sp, o)
+	nc = 20
+	nr = 20
+	nsr = 20
+	generate_users(n, ns, p, sp, o, nc, nr, nsr)
 
 main()
 
