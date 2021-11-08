@@ -6,7 +6,7 @@ from wtforms.validators import DataRequired
 
 from .models.product import Product
 from .models.purchase import Purchase
-from .models.sellproduct import SellProduct
+from .models.sellproduct import Sellproduct
 
 from flask import Blueprint
 bp = Blueprint('index', __name__)
@@ -51,12 +51,13 @@ def search():
 @bp.route('/more/<variable>', methods=['GET', 'POST'])
 def moreInfo(variable):
     item = Product.get(variable)
-    #sells_item = SellProduct.get_all()
-    sells_item = Product.get_all(True)
+    reviews = Product.get_all(True)
+    sells_item = Sellproduct.get_by_product(variable)
 
     return render_template('products.html',
                            product=item,
-                           sells= sells_item)
+                           sells= sells_item,
+                           reviews=reviews)
 
 
 

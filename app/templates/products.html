@@ -22,6 +22,9 @@
           <p style="font-size: 16px; font-weight: normal; text-align: left; float: left;">
             {{product.descrip}}
           </p>
+          <p>
+            Average Rating: 
+          </p>
         </div>
       </div>
 
@@ -45,12 +48,12 @@
       <br />
       <table class='table table-hover table-bordered container'>
         <tbody>
-          {% for seller in sells%}
+          {% for review in reviews%}
             <tr style= "height: 100px">
               <td>
                 <div>
-                  <p> {{seller.id}} </p>
-                  <p> {{seller.name}} </p>
+                  <p> {{review.id}} </p>
+                  <p> {{review.name}} </p>
                 </div>
               </td>
             </tr>
@@ -64,16 +67,29 @@
       <br />
       <table class='table table-hover table-bordered container'>
         <tbody>
-          {% for seller in sells%}
+          {% if sells is iterable %}
+          
+            {% for seller in sells%}
+              <tr style= "height: 100px">
+                <td>
+                  <div>
+                    <p> {{seller.seller_id}} </p>
+                    <p> {{seller.product_id}} </p>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          
+          {% else %}
             <tr style= "height: 100px">
               <td>
                 <div>
-                  <p> {{seller.id}} </p>
-                  <p> {{seller.name}} </p>
+                  <p> {{sells.seller_id}} </p>
+                  <p> {{sells.product_id}} </p>
                 </div>
               </td>
             </tr>
-          {% endfor %}
+          {% endif %}
         </tbody>
     </table>
   </div>

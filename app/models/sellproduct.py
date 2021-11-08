@@ -1,7 +1,7 @@
 from flask import current_app as app
 
 
-class SellProduct:
+class Sellproduct:
     def __init__(self, seller_id, product_id):
         self.seller_id = seller_id
         self.product_id = product_id
@@ -15,7 +15,7 @@ FROM SellProducts
 WHERE product_id = :product_id
 ''',
                               product_id=pid)
-        return SellProduct(*(rows[0])) if rows is not None else None
+        return [Sellproduct(*row) for row in rows]
 
 
     @staticmethod
@@ -24,7 +24,7 @@ WHERE product_id = :product_id
 SELECT seller_id, product_id
 FROM SellProducts
 ''')
-        return SellProduct(*(rows[0])) if rows is not None else None
+        return [Sellproduct(*row) for row in rows]
 
 
     @staticmethod
@@ -35,4 +35,4 @@ FROM SellProducts
 WHERE seller_id = :seller_id
 ''',
                               seller_id=sid)
-        return SellProduct(*(rows[0])) if rows is not None else None
+        return [Sellproduct(*row) for row in rows]
