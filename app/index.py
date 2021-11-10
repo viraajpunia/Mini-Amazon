@@ -7,6 +7,7 @@ from wtforms.validators import DataRequired
 from .models.product import Product
 from .models.purchase import Purchase
 from .models.sellproduct import Sellproduct
+from .models.user2 import User2
 
 from flask import Blueprint
 bp = Blueprint('index', __name__)
