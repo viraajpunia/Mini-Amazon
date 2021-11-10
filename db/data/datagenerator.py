@@ -136,7 +136,7 @@ def generate_users(n_users, num_sellers, products, sells_products, orders, n_car
 		newreview['product_id'] = random.choice(product_id_set)
 		newreview['uid'] = i
 		newreview['rating'] = random.randint(1, 5)
-		newreview['review'] = fake.sentence
+		newreview['review'] = fake.sentence()
 
 		timestamp = fake.date_time_this_month()
 		newreview['date'] = timestamp.strftime('%Y-%m-%d %r')
@@ -151,7 +151,7 @@ def generate_users(n_users, num_sellers, products, sells_products, orders, n_car
 		newsreview = {}
 		newsreview['uid'] = i
 		newsreview['review_id'] = random.randint(0, n_seller_reviews-1)
-		newsreview['review'] = fake.sentence
+		newsreview['review'] = fake.sentence()
 
 		sellerReviews_data.append(newsreview)
 
