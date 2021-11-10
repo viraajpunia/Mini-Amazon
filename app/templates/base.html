@@ -19,7 +19,7 @@
 
     .sidenav {
         height: 100%;
-        background-color: #9270ff;
+        background-color: #424874;
         padding-top: 15px;
     }
 
@@ -219,7 +219,7 @@
 <body>
   <div class="sidenav">
     {% block msg %}
-      <button class = "nozamabutton"> Nozama </button>
+      <button onclick="location.href='{{ url_for('index.index') }}'" type="button" class = "nozamabutton"> Nozama </button>
 
       <form action= "/search" style="display: inline-block;">
         <select id="categories" name="categories">
