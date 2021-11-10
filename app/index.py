@@ -12,9 +12,9 @@ from flask import Blueprint
 bp = Blueprint('index', __name__)
 
 
-@bp.route('/carts')
-def carts():
-    return render_template('carts.html')
+@bp.route('/cart')
+def cart():
+    return render_template('cart.html')
 
 @bp.route('/')
 def index():
