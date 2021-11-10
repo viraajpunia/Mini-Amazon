@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br><br>
+<h2 style= "position: relative; left: 250px">Shipping Information</h2>
+<div style = "position: absolute; top: 200px; left: 260px;">
+    <input type="text" placeholder="First Name" name="item" />
+</div>
+<div style = "position: absolute; top: 200px; left: 460px;">
+    <input type="text" placeholder="Last Name" name="item" />
+</div>
+<div style = "position: absolute; top: 240px; left: 260px;">
+    <input type="text" placeholder="Address Line 1" name="item" />
+</div>
+<div style = "position: absolute; top: 240px; left: 460px;">
+    <input type="text" placeholder="Address Line 2" name="item" />
+</div>
+<div style = "position: absolute; top: 280px; left: 260px;">
+    <input type="text" placeholder="Zip Code" name="item" />
+</div>
+<div style = "position: absolute; top: 280px; left: 460px;">
+    <input type="text" placeholder="State" name="item" />
+</div>
+<div style = "position: absolute; top: 320px; left: 260px;">
+    <input type="text" placeholder="Country" name="item" />
+</div>
+<div style = "position: absolute; top: 315px; left: 450px;">
+    <select id="categories" name="categories">
+        <option value="Shipping Options">Shipping Options</option>
+        <option value="Standard Shipping - $2.99">Standard Shipping - $2.99</option>
+        <option value="Expedited Shipping - $4.99">Expedited Shipping - $4.99</option>
+        <option value="Two Day Shipping - $8.99">Two Day Shipping - $8.99</option>
+        <option value="One Day Shipping - $11.99">One Day Shipping - $11.99</option>
+    </select>
+</div>
+<h2 style= "position: relative; top:200px; left: 250px">Payment Information</h2>
+<div style = "position: absolute; top: 450px; left: 260px;">
+    <input type="text" placeholder="Card Number" name="item" />
+</div>
+<div style = "position: absolute; top: 450px; left: 460px;">
+    <input type="text" placeholder="CVV" name="item" />
+</div>
+<div style = "position: absolute; top: 490px; left: 260px;">
+    <input type="text" placeholder="Month" name="item" />
+</div>
+<div style = "position: absolute; top: 490px; left: 460px;">
+    <input type="text" placeholder="Year" name="item" />
+</div>
+
+
+<div style = "position: absolute; top: 140px; left: 1300px;">
+    <a class="btn btn-secondary" href="{{ url_for('users.register') }}" role="button">Submit Order</a>
+</div>
+
+
+<br />
+
+{% endblock %}

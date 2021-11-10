@@ -16,6 +16,10 @@ bp = Blueprint('index', __name__)
 def cart():
     return render_template('cart.html')
 
+@bp.route('/order')
+def order():
+    return render_template('order.html')
+
 @bp.route('/')
 def index():
     # get all available products for sale:
