@@ -10,6 +10,7 @@ from .models.sellproduct import Sellproduct
 from .models.user2 import User2
 from .models.cart import UserCart
 
+
 from flask import Blueprint
 bp = Blueprint('index', __name__)
 
