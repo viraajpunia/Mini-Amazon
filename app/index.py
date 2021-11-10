@@ -16,7 +16,7 @@ bp = Blueprint('index', __name__)
 def seller():
     id = request.args.get('seller_id')
 
-    userinfo = User2.get(10)
+    userinfo = User2.get(1)
     
     return render_template('seller.html',
                             user = userinfo)
