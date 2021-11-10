@@ -12,6 +12,10 @@ from flask import Blueprint
 bp = Blueprint('index', __name__)
 
 
+@bp.route('/cart')
+def cart():
+    return render_template('cart.html')
+
 @bp.route('/')
 def index():
     # get all available products for sale:
