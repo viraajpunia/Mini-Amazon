@@ -11,6 +11,15 @@ from .models.sellproduct import Sellproduct
 from flask import Blueprint
 bp = Blueprint('index', __name__)
 
+@bp.route('/seller', methods=['GET', 'POST'])
+def seller():
+    id = request.args.get('seller_id')
+
+    userinfo = User2.get(10)
+    
+    return render_template('seller.html',
+                            user = userinfo)
+
 
 @bp.route('/cart')
 def cart():
