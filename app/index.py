@@ -9,7 +9,9 @@ from .models.product import Product
 from .models.purchase import Purchase
 from .models.sellproduct import Sellproduct
 from .models.user2 import User2
+from .models.user import User
 from .models.cart import UserCart
+from .models.useracct import UserAccount
 
 
 from flask import Blueprint
@@ -30,6 +32,45 @@ def seller():
     return render_template('seller.html',
                             user = userinfo,
                             products = prods)
+
+@bp.route('/nonsellerpublicinfo', methods=['GET', 'POST'])
+def nonsellerpublicinfo():
+    id = request.args.get('uid')
+    email = request.args.get('email')
+    password = request.args.get('password')
+
+    userinfo = User2.get(7)
+    
+    return render_template('nonsellerpublicinfo.html',
+                            user = userinfo)
+
+@bp.route('/useracctpage', methods=['GET', 'POST'])
+def useracctpage():
+    id = request.args.get('uid')
+    email = request.args.get('email')
+    password = request.args.get('password')
+
+    userinfo = User2.get(7)
+    purchase = Purchase.get(7)
+    account = UserAccount.get(7)
+    
+    
+    return render_template('useracctpage.html',
+                            user = userinfo, purchase = purchase, acct  = account)
+
+@bp.route('/newuseracctpage', methods=['GET', 'POST'])
+def newuseracctpage():
+    id = request.args.get('uid')
+    email = request.args.get('email')
+    password = request.args.get('password')
+
+    userinfo = User2.get(8)
+    purchase = Purchase.get(7)
+    account = UserAccount.get(8)
+    
+    
+    return render_template('newuseracctpage.html',
+                            user = userinfo, purchase = purchase, acct  = account)
 
 
 @bp.route('/cart')

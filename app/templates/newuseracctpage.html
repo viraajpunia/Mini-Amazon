@@ -1,0 +1,61 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+
+</div>
+    <h1 style= "position: absolute; left: 250px">New User Account Page
+    <h3>
+      <br />
+      <br />
+      <br />
+      <p>
+        Name:
+        {{ user.first_name}} {{ user.mid_name}} {{ user.last_name}}
+      </p>
+      <p>Email:
+        {{user.email}}
+      </p>
+      <p>Address:
+        {{user.address}}
+      </p>
+      <p>Balance:
+        {{acct.balance}}
+      </p>
+      <p>Account Id:
+        {{user.uid}}
+      </p>
+    </h3>
+    <br />
+    <h3>Your recent purchases:</h3>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Order ID</th>
+      <th scope="col">Account ID</th>
+      <th scope="col">Seller ID</th>
+      <th scope="col">Product ID</th>
+      <th scope="col">Time Ordered</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Fulfillment Status</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr>
+        <th scope="row"></th>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+  </tbody>
+</table>
+</div>
+<a class="btn btn-secondary" href="{{ url_for('index.nonsellerpublicinfo') }}" role="button">Public View</a>
+<a class="btn btn-secondary" role="button">Add Balance</a>
+<a class="btn btn-secondary" role="button">Withdraw Balance</a>
+
+{% endblock %}
