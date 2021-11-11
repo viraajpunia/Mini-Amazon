@@ -6,16 +6,20 @@ from .. import login
 
 
 class User(UserMixin):
-    def __init__(self, uid, email, first_name, last_name):
+    def __init__(self, uid, first_name, mid_name, last_name,
+                email, address, password):
         self.uid = uid
-        self.email = email
         self.first_name = first_name
+        self.mid_name = mid_name
         self.last_name = last_name
+        self.email = email
+        self.address = address
+        self.password = password
 
     @staticmethod
     def get_by_auth(email, password):
         rows = app.db.execute("""
-SELECT password, uid, email, first_name, last_name
+SELECT uid, first_name, mid_name, last_name, email, address, password
 FROM UserInfo
 WHERE email = :email
 """,
@@ -39,17 +43,19 @@ WHERE email = :email
         return len(rows) > 0
 
     @staticmethod
-    def register(email, password, first_name, last_name):
+    def register(first_name, mid_name, last_name, email, address, password):
         try:
             rows = app.db.execute("""
-INSERT INTO Users(email, password, first_name, last_name)
-VALUES(:email, :password, :first_name, :last_name)
+INSERT INTO Users(first_name, mid_name, last_name, email, address, password)
+VALUES(:first_name, :mid_name, :last_name, :email, :address, :password)
 RETURNING uid
 """,
                                   email=email,
                                   password=generate_password_hash(password),
                                   first_name=first_name,
-                                  last_name=last_name)
+                                  mid_name=mid_name,
+                                  last_name=last_name,
+                                  address = address)
             uid = rows[0][0]
             return User.get(uid)
         except Exception:
@@ -61,7 +67,7 @@ RETURNING uid
     @login.user_loader
     def get(uid):
         rows = app.db.execute("""
-SELECT uid, email, first_name, last_name
+SELECT uid, email, first_name, mid_name, last_name
 FROM UserInfo
 WHERE uid = :uid
 """,

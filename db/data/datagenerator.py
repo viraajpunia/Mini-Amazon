@@ -25,6 +25,7 @@ def generate_users(n_users, num_sellers, products, sells_products, orders, n_car
 	account_data = []
 
 	for i in range(0, n_users):
+		balance = round(random.uniform(0, 5000), 2)
 		newuser = {}
 		newuser['uid'] = i
 		newuser['first_name'] = fake.first_name()
@@ -33,11 +34,12 @@ def generate_users(n_users, num_sellers, products, sells_products, orders, n_car
 		newuser['email'] = fake.email()
 		newuser['address'] = fake.address()
 		newuser['password'] = fake.password()
+		newuser['balance'] = balance
 		user_data.append(newuser)
 
 		newacc = {}
 		newacc['uid'] = i
-		newacc['balance'] = round(random.uniform(0, 5000), 2)
+		newacc['balance'] = balance
 		account_data.append(newacc)
 
 	write_file(user_data, "Users.csv")

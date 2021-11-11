@@ -14,6 +14,13 @@
     {% endfor %}
   </p>
   <p>
+    {{ form.middlename.label }}<br/>
+    {{ form.middlename(size=32) }}<br/>
+    {% for error in form.middlename.errors %}
+    <span style="color: red;">[{{ error }}]</span>
+    {% endfor %}
+  </p>
+  <p>
     {{ form.lastname.label }}<br/>
     {{ form.lastname(size=32) }}<br/>
     {% for error in form.lastname.errors %}
@@ -48,8 +55,7 @@
     <span style="color: red;">[{{ error }}]</span>
     {% endfor %}
   </p>
-  
-  <a class="btn btn-secondary" href="{{ url_for('index.useracctpage') }}" role="button">Register</a>
+  <a class="btn btn-secondary" href="{{ url_for('index.newuseracctpage') }}" role="button">Register</a>
 </form>
 
 {% endblock %}
