@@ -6,17 +6,17 @@ from .. import login
 
 
 class User(UserMixin):
-    def __init__(self, id, email, firstname, lastname):
-        self.id = id
+    def __init__(self, uid, email, first_name, last_name):
+        self.uid = uid
         self.email = email
-        self.firstname = firstname
-        self.lastname = lastname
+        self.first_name = first_name
+        self.last_name = last_name
 
     @staticmethod
     def get_by_auth(email, password):
         rows = app.db.execute("""
-SELECT password, id, email, firstname, lastname
-FROM Users
+SELECT password, uid, email, first_name, last_name
+FROM UserInfo
 WHERE email = :email
 """,
                               email=email)
@@ -32,26 +32,26 @@ WHERE email = :email
     def email_exists(email):
         rows = app.db.execute("""
 SELECT email
-FROM Users
+FROM UserInfo
 WHERE email = :email
 """,
                               email=email)
         return len(rows) > 0
 
     @staticmethod
-    def register(email, password, firstname, lastname):
+    def register(email, password, first_name, last_name):
         try:
             rows = app.db.execute("""
-INSERT INTO Users(email, password, firstname, lastname)
-VALUES(:email, :password, :firstname, :lastname)
-RETURNING id
+INSERT INTO Users(email, password, first_name, last_name)
+VALUES(:email, :password, :first_name, :last_name)
+RETURNING uid
 """,
                                   email=email,
                                   password=generate_password_hash(password),
-                                  firstname=firstname,
-                                  lastname=lastname)
-            id = rows[0][0]
-            return User.get(id)
+                                  first_name=first_name,
+                                  last_name=last_name)
+            uid = rows[0][0]
+            return User.get(uid)
         except Exception:
             # likely email already in use; better error checking and
             # reporting needed
@@ -59,11 +59,11 @@ RETURNING id
 
     @staticmethod
     @login.user_loader
-    def get(id):
+    def get(uid):
         rows = app.db.execute("""
-SELECT id, email, firstname, lastname
-FROM Users
-WHERE id = :id
+SELECT uid, email, first_name, last_name
+FROM UserInfo
+WHERE uid = :uid
 """,
-                              id=id)
+                              uid=uid)
         return User(*(rows[0])) if rows else None

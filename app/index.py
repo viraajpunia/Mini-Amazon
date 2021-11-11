@@ -23,6 +23,25 @@ def seller():
     return render_template('seller.html',
                             user = userinfo)
 
+@bp.route('/nonsellerpublicinfo', methods=['GET', 'POST'])
+def nonsellerpublicinfo():
+    id = request.args.get('uid')
+
+    userinfo = User2.get(7)
+    
+    return render_template('nonsellerpublicinfo.html',
+                            user = userinfo)
+
+@bp.route('/useracctpage', methods=['GET', 'POST'])
+def useracctpage():
+    id = request.args.get('uid')
+
+    userinfo = User2.get(7)
+    
+    
+    return render_template('useracctpage.html',
+                            user = userinfo)
+
 
 @bp.route('/cart')
 def cart():
