@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_login import current_user
 import datetime
 import sys
+
 from wtforms.validators import DataRequired
 
 from .models.product import Product
@@ -16,12 +17,19 @@ bp = Blueprint('index', __name__)
 
 @bp.route('/seller', methods=['GET', 'POST'])
 def seller():
+    
     id = request.args.get('seller_id')
 
     userinfo = User2.get(1)
+    #prods = Sellproduct.get_by_seller(10)
+    prods = Sellproduct.get_by_seller(10)
+    print(prods, file=sys.stderr)
+    #print(userinfo.first_name, file=sys.stderr)
+    
     
     return render_template('seller.html',
-                            user = userinfo)
+                            user = userinfo,
+                            products = prods)
 
 
 @bp.route('/cart')
@@ -76,7 +84,7 @@ def moreInfo(variable):
     item = Product.get(variable)
     reviews = Product.get_all(True)
     sells_item = Sellproduct.get_by_product(variable)
-
+    
     return render_template('products.html',
                            product=item,
                            sells= sells_item,
