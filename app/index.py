@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_login import current_user
 import datetime
+import sys
 
 from wtforms.validators import DataRequired
 
@@ -18,12 +19,19 @@ bp = Blueprint('index', __name__)
 
 @bp.route('/seller', methods=['GET', 'POST'])
 def seller():
+    
     id = request.args.get('seller_id')
 
     userinfo = User2.get(1)
+    #prods = Sellproduct.get_by_seller(10)
+    prods = Sellproduct.get_by_seller(10)
+    print(prods, file=sys.stderr)
+    #print(userinfo.first_name, file=sys.stderr)
+    
     
     return render_template('seller.html',
-                            user = userinfo)
+                            user = userinfo,
+                            products = prods)
 
 @bp.route('/nonsellerpublicinfo', methods=['GET', 'POST'])
 def nonsellerpublicinfo():
@@ -67,13 +75,14 @@ def newuseracctpage():
 
 @bp.route('/cart')
 def cart():
-    carts = UserCart.cart_by_user(1)
-    return render_template('cart.html')
+    carts = UserCart.cart_by_user("1")
+    item = Product.get(5)
+    return render_template('cart.html', cartofuser = carts, product = item)
 
 @bp.route('/order')
 def order():
-    userinfo = UserCart.get(10)
-    return render_template('order.html')
+    item = Product.get(5)
+    return render_template('order.html', product = item)
 
 @bp.route('/')
 def index():
@@ -116,7 +125,7 @@ def moreInfo(variable):
     item = Product.get(variable)
     reviews = Product.get_all(True)
     sells_item = Sellproduct.get_by_product(variable)
-
+    
     return render_template('products.html',
                            product=item,
                            sells= sells_item,

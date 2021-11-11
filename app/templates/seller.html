@@ -23,6 +23,18 @@
   <div class="column">
     <h2>Reviews</h2>
     <h2>Average Rating:</h2>
+    <tbody>
+      {% for prod in products%}
+        <tr style= "height: 100px">
+          <td>
+            <div>
+        
+              <p> {{ prod.product_id }} </p>
+            </div>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
   </div>
 </div>
 
