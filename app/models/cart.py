@@ -4,25 +4,25 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from .. import login
 
-class UserCart(UserMixin):
-    def __init__(self, uid, seller_id, product_id, balance, category, name, price):
+class UserCart:
+    def __init__(self, uid, product_id, quantity, balance, category, name, descrip, img_link, price):
         self.uid = uid
-        self.seller_id = seller_id
         self.product_id = product_id
+        self.quantity = quantity
         self.balance = balance
         self.category = category
         self.name = name
+        self.descrip = descrip
+        self.img_link = img_link
         self.price = price
-
-
 
 
     @staticmethod
     def cart_by_user(uid):
         rows = app.db.execute("""
-SELECT uid, product_id, quantity
-FROM UserCarts
-WHERE uid = :uid
+SELECT thing1.uid, thing1.product_id, thing1.quantity, thing1.balance, Products.category, Products.name, Products.descrip, Products.img_link, Products.price FROM 
+    (SELECT UserCarts.uid, UserCarts.product_id, UserCarts.quantity, UserAcc.balance FROM UserCarts LEFT OUTER JOIN UserAcc ON UserCarts.uid = UserAcc.uid) 
+AS thing1 LEFT OUTER JOIN Products ON thing1.product_id = Products.product_id
 """,
                               uid=uid)
-        return [UserCarts(*row) for row in rows]
+        return [UserCart(*row) for row in rows]

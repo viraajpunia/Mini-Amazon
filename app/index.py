@@ -34,13 +34,14 @@ def seller():
 
 @bp.route('/cart')
 def cart():
-    carts = UserCart.cart_by_user(1)
-    return render_template('cart.html')
+    carts = UserCart.cart_by_user("1")
+    item = Product.get(5)
+    return render_template('cart.html', cartofuser = carts, product = item)
 
 @bp.route('/order')
 def order():
-    userinfo = UserCart.get(10)
-    return render_template('order.html')
+    item = Product.get(5)
+    return render_template('order.html', product = item)
 
 @bp.route('/')
 def index():
