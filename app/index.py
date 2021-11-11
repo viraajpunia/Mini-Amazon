@@ -27,12 +27,13 @@ def seller():
 @bp.route('/cart')
 def cart():
     carts = UserCart.cart_by_user("1")
-    print(carts, file=sys.stderr)
-    return render_template('cart.html', cartofuser = carts)
+    item = Product.get(5)
+    return render_template('cart.html', cartofuser = carts, product = item)
 
 @bp.route('/order')
 def order():
-    return render_template('order.html')
+    item = Product.get(5)
+    return render_template('order.html', product = item)
 
 @bp.route('/')
 def index():
