@@ -26,7 +26,6 @@ WHERE product_id = :id
         rows = app.db.execute('''
 SELECT product_id, category, name, descrip, img_link, price, available
 FROM Products
-WHERE available = :available
 ''',
                               available=available)
         return [Product(*row) for row in rows]

@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_login import current_user
 import datetime
-
+import sys
 from wtforms.validators import DataRequired
 
 from .models.product import Product
@@ -26,12 +26,12 @@ def seller():
 
 @bp.route('/cart')
 def cart():
-    carts = UserCart.cart_by_user(1)
-    return render_template('cart.html')
+    carts = UserCart.cart_by_user("1")
+    print(carts, file=sys.stderr)
+    return render_template('cart.html', cartofuser = carts)
 
 @bp.route('/order')
 def order():
-    userinfo = UserCart.get(10)
     return render_template('order.html')
 
 @bp.route('/')
