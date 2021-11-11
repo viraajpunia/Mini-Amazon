@@ -61,10 +61,9 @@ CREATE TABLE Purchases (
 CREATE TABLE UserCarts (
     uid INT NOT NULL PRIMARY KEY,
     product_id INT NOT NULL,
-    seller_id INT NOT NULL,
     quantity INT NOT NULL,
     --FOREIGN KEY (product_id) REFERENCES Products(product_id),
-    FOREIGN KEY (product_id, seller_id) REFERENCES SellProducts(product_id, seller_id),
+    FOREIGN KEY (product_id) REFERENCES SellProducts(product_id),
     FOREIGN KEY (uid) REFERENCES UserAcc(uid)
 );
 
