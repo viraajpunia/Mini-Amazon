@@ -9,6 +9,8 @@ from .models.product import Product
 from .models.purchase import Purchase
 from .models.sellproduct import Sellproduct
 from .models.user2 import User2
+from .models.cart import UserCart
+
 
 from flask import Blueprint
 bp = Blueprint('index', __name__)
@@ -32,10 +34,12 @@ def seller():
 
 @bp.route('/cart')
 def cart():
+    carts = UserCart.cart_by_user(1)
     return render_template('cart.html')
 
 @bp.route('/order')
 def order():
+    userinfo = UserCart.get(10)
     return render_template('order.html')
 
 @bp.route('/')
