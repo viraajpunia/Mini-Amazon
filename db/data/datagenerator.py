@@ -143,7 +143,7 @@ def generate_users(n_users, num_sellers, products, sells_products, orders, n_car
 		timestamp = fake.date_time_this_month()
 		newreview['date'] = timestamp.strftime('%Y-%m-%d %r')
 
-		feedback_data.append(newcart)
+		feedback_data.append(newreview)
 
 	write_file(feedback_data, "Feedback.csv")
 
@@ -180,14 +180,14 @@ def write_file(dict_data, csv_file):
 
 
 def main():
-	n = 20
-	ns = 10
-	p = 20
-	sp = 20
-	o = 20
-	nc = 20
-	nr = 20
-	nsr = 20
+	n = 500
+	ns = 500
+	p = 500
+	sp = 500
+	o = 500
+	nc = 500
+	nr = 500
+	nsr = 500
 	generate_users(n, ns, p, sp, o, nc, nr, nsr)
 
 main()
