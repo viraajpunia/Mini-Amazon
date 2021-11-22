@@ -90,7 +90,7 @@ def generate_users(n_users, num_sellers, products, sells_products, orders, n_car
 
 		t2 = fake.image_url()
 		while True:
-			if t2 in image_set:
+			if t2 in image_set or 'dummyimage' in t2:
 				t2 = fake.image_url()
 			else:
 				break;
