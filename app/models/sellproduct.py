@@ -31,6 +31,16 @@ FROM SellProducts
 ''')
         return [Sellproduct(*row) for row in rows]
 
+    @staticmethod
+    def get_product_simple(pid):
+        rows = app.db.execute('''
+SELECT seller_id, product_id
+FROM SellProducts
+WHERE product_id = :product_id
+''',
+                              product_id=pid)
+        return [Sellproduct(*row) for row in rows]
+
 
     @staticmethod
     def get_by_seller(sid):

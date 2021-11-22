@@ -20,12 +20,14 @@ def generate_users(n_users, num_sellers, products, sells_products, orders, n_car
 		n_seller_reviews: number of seller reviews to generate
 	'''
 
+	random.seed(123456)
+
 	# Generate fake users and user accounts
 	user_data = []
 	account_data = []
 
-	for i in range(0, n_users):
-		balance = round(random.uniform(0, 5000), 2)
+	for i in range(1, n_users+1):
+		balance = round(random.uniform(1, 5000), 2)
 		newuser = {}
 		newuser['uid'] = i
 		newuser['first_name'] = fake.first_name()
@@ -50,7 +52,7 @@ def generate_users(n_users, num_sellers, products, sells_products, orders, n_car
 	seller_list = []
 	count = 0
 	while count < num_sellers:
-		seller = random.randint(0, n_users)
+		seller = random.randint(1, n_users)
 		if seller not in seller_list:
 			seller_list.append(seller)
 			count += 1
@@ -64,18 +66,38 @@ def generate_users(n_users, num_sellers, products, sells_products, orders, n_car
 	# Generate fake products
 	product_data = []
 	product_id_set = set()
+	product_name_set = set()
+	image_set = set()
 
-	for i in range(0, products):
+	for i in range(1, products + 1):
 		newprod = {}
 		pid = i
 		newprod['product_id'] = pid
 		product_id_set.add(pid)
 		categories = ['a', 'b', 'c', 'd', 'e', 'f']
 		newprod['category'] = random.choice(categories)
-		newprod['name'] = fake.word()
+
+		t1 = fake.word()
+		while True:
+			if t1 in product_name_set:
+				t1 = fake.word()
+			else:
+				break;
+		newprod['name'] = t1
+		product_name_set.add(t1)
+
 		newprod['descrip'] = fake.text()
-		newprod['img_link'] = fake.image_url()
-		newprod['price'] = round(random.uniform(0, 3000), 2)
+
+		t2 = fake.image_url()
+		while True:
+			if t2 in image_set:
+				t2 = fake.image_url()
+			else:
+				break;
+		image_set.add(t2)
+
+		newprod['img_link'] = t2
+		newprod['price'] = round(random.uniform(1, 3000), 2)
 		newprod['available'] = random.choice([True, False])
 		product_data.append(newprod)
 
@@ -102,7 +124,7 @@ def generate_users(n_users, num_sellers, products, sells_products, orders, n_car
 	# Generate fake purchases
 	purchase_data = []
 	sell_product_set = list(sell_product_set)
-	for i in range(0, orders):
+	for i in range(1, orders + 1):
 		neworder = {}
 		neworder['order_id'] = i
 		sp = random.choice(sell_product_set)
@@ -112,7 +134,7 @@ def generate_users(n_users, num_sellers, products, sells_products, orders, n_car
 		timestamp = fake.date_time_this_month()
 		neworder['current_timestamp'] = timestamp.strftime('%Y-%m-%d %r')
 
-		neworder['uid'] = random.randint(0, n_users-1)
+		neworder['uid'] = random.randint(1, n_users)
 
 		neworder['num_items'] = random.randint(1, 20)
 		neworder['fulfillment_status'] = random.choice(["Order received", "Shipped", "Delivered"])
@@ -122,10 +144,12 @@ def generate_users(n_users, num_sellers, products, sells_products, orders, n_car
 
 
 	cart_data = []
-	for i in range(0, n_carts):
+	for i in range(1, n_carts + 1):
 		newcart = {}
 		newcart['uid'] = i
-		newcart['product_id'] = random.choice(product_id_set)
+		sp = random.choice(sell_product_set)
+		newcart['product_id'] = sp[1]
+		newcart['seller_id'] = sp[0]
 		newcart['quantity'] = random.randint(1, 20)
 		cart_data.append(newcart)
 
@@ -133,7 +157,7 @@ def generate_users(n_users, num_sellers, products, sells_products, orders, n_car
 
 
 	feedback_data = []
-	for i in range(0, n_reviews):
+	for i in range(1, n_reviews + 1):
 		newreview = {}
 		newreview['product_id'] = random.choice(product_id_set)
 		newreview['uid'] = i
@@ -149,10 +173,10 @@ def generate_users(n_users, num_sellers, products, sells_products, orders, n_car
 
 
 	sellerReviews_data = []
-	for i in range(0, n_seller_reviews):
+	for i in range(1, n_seller_reviews + 1):
 		newsreview = {}
 		newsreview['uid'] = i
-		newsreview['review_id'] = random.randint(0, n_seller_reviews-1)
+		newsreview['review_id'] = random.randint(1, n_seller_reviews)
 		newsreview['review'] = fake.sentence()
 
 		sellerReviews_data.append(newsreview)
@@ -181,9 +205,9 @@ def write_file(dict_data, csv_file):
 
 def main():
 	n = 500
-	ns = 500
+	ns = 200
 	p = 500
-	sp = 500
+	sp = 1000
 	o = 500
 	nc = 500
 	nr = 500
