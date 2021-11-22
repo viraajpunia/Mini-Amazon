@@ -4,3 +4,5 @@
 \COPY SellProducts FROM 'data/SellProducts.csv' WITH DELIMITER ',' NULL '' CSV
 \COPY Purchases FROM 'data/Purchases.csv' WITH DELIMITER ',' NULL '' CSV
 \COPY UserCarts FROM 'data/Carts.csv' WITH DELIMITER ',' NULL '' CSV
+\COPY Feedback FROM 'data/Feedback.csv' WITH DELIMITER ',' NULL '' CSV
+\COPY SellerReviews FROM 'data/SellerReviews.csv' WITH DELIMITER ',' NULL '' CSV

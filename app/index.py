@@ -12,6 +12,7 @@ from .models.user2 import User2
 from .models.user import User
 from .models.cart import UserCart
 from .models.useracct import UserAccount
+from .models.productfeedback import ProductFeedback
 
 
 from flask import Blueprint
@@ -123,7 +124,7 @@ def search():
 @bp.route('/more/<variable>', methods=['GET', 'POST'])
 def moreInfo(variable):
     item = Product.get(variable)
-    reviews = Product.get_all(True)
+    reviews = ProductFeedback.get_item_reviews(variable)
     sells_item = Sellproduct.get_by_product(variable)
     
     return render_template('products.html',

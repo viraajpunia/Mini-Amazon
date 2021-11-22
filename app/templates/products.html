@@ -52,8 +52,18 @@
             <tr style= "height: 100px">
               <td>
                 <div>
-                  <p> {{review.id}} </p>
-                  <p> {{review.name}} </p>
+                  <p style = "display: inline-block; font-size: 18px; font-weight: bold; padding-top: 8px">
+                    {{review.buyer_first_name}} {{review.buyer_mid_name}} {{review.buyer_last_name}}
+                  </p>
+                  <p style = "display: inline-block; font-size: 15px; padding-top: 8px; margin-left: 10px;">
+                    {{review.date.month}}/{{review.date.day}}/{{review.date.year}}
+                  </p>
+                  <p style = "display: inline-block; font-size: 18px; font-weight: bold; padding-top: 8px; float: right; margin-right: 10px">
+                    Rating: {{review.rating}}
+                  </p>
+                  <p>
+                    {{review.review}}
+                  </p>
                 </div>
               </td>
             </tr>
@@ -73,7 +83,7 @@
                 <td>
                   <div>
                     <p style = "display: inline-block; font-size: 18px; font-weight: bold; padding-top: 8px"> 
-                      Seller: {{seller.seller_first_name}} {{seller.seller_mid_name}}  {{seller.seller_last_name}} 
+                      Seller: {{seller.first_name}} {{seller.mid_name}}  {{seller.last_name}} 
                     </p>
                     <form action= "/num" style="display: inline-block; float: right">
                       <select id="num" name="num" style="background-color: #E0E4F5;">
@@ -102,7 +112,7 @@
               <td>
                 <div>
                   <p style = "display: inline-block; font-size: 18px; font-weight: bold; padding-top: 8px"> 
-                      Seller: {{seller.seller_first_name}} {{seller.seller_mid_name}}  {{seller.seller_last_name}} 
+                      Seller: {{seller.first_name}} {{seller.mid_name}}  {{seller.last_name}} 
                     </p>
                     <form action= "/num" style="display: inline-block; float: right">
                       <select id="num" name="num" style="background-color: #E0E4F5;">
