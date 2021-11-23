@@ -23,7 +23,7 @@
             {{product.descrip}}
           </p>
           <p>
-            Average Rating: 
+            Average Rating: {{rate.avg}}
           </p>
         </div>
       </div>
@@ -53,7 +53,7 @@
               <td>
                 <div>
                   <p style = "display: inline-block; font-size: 18px; font-weight: bold; padding-top: 8px">
-                    {{review.buyer_first_name}} {{review.buyer_mid_name}} {{review.buyer_last_name}}
+                    <a href="{{ url_for('index.nonsellerpublicinfo', variable=review.buyer_id) }}">{{review.buyer_first_name}} {{review.buyer_mid_name}} {{review.buyer_last_name}}</a>
                   </p>
                   <p style = "display: inline-block; font-size: 15px; padding-top: 8px; margin-left: 10px;">
                     {{review.date.month}}/{{review.date.day}}/{{review.date.year}}
@@ -83,7 +83,7 @@
                 <td>
                   <div>
                     <p style = "display: inline-block; font-size: 18px; font-weight: bold; padding-top: 8px"> 
-                      Seller: {{seller.first_name}} {{seller.mid_name}}  {{seller.last_name}} 
+                      <a href="{{ url_for('index.seller', variable=seller.seller_id) }}">Seller: {{seller.first_name}} {{seller.mid_name}}  {{seller.last_name}}</a>
                     </p>
                     <form action= "/num" style="display: inline-block; float: right">
                       <select id="num" name="num" style="background-color: #E0E4F5;">
@@ -112,18 +112,18 @@
               <td>
                 <div>
                   <p style = "display: inline-block; font-size: 18px; font-weight: bold; padding-top: 8px"> 
-                      Seller: {{seller.first_name}} {{seller.mid_name}}  {{seller.last_name}} 
-                    </p>
-                    <form action= "/num" style="display: inline-block; float: right">
-                      <select id="num" name="num" style="background-color: #E0E4F5;">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                      </select>
-                      <button class="formbutton" type="submit" style="background-color: #E0E4F5; color: black; padding-top: 10px; padding-bottom: 10px; padding-left: 30px; padding-right: 30px; font-size: 16px; border: none; margin-bottom: 12px;">Add to Cart</button>
-                    </form>
+                    <a href="{{ url_for('index.seller', variable=seller.seller_id) }}">Seller: {{seller.first_name}} {{seller.mid_name}}  {{seller.last_name}}</a> 
+                  </p>
+                  <form action= "/num" style="display: inline-block; float: right">
+                    <select id="num" name="num" style="background-color: #E0E4F5;">
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                    </select>
+                    <button class="formbutton" type="submit" style="background-color: #E0E4F5; color: black; padding-top: 10px; padding-bottom: 10px; padding-left: 30px; padding-right: 30px; font-size: 16px; border: none; margin-bottom: 12px;">Add to Cart</button>
+                  </form>
                   
                 </div>
               </td>

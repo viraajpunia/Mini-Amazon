@@ -25,6 +25,7 @@ def generate_users(n_users, num_sellers, products, sells_products, orders, n_car
 	# Generate fake users and user accounts
 	user_data = []
 	account_data = []
+	email_set = set()
 
 	for i in range(1, n_users+1):
 		balance = round(random.uniform(1, 5000), 2)
@@ -34,6 +35,16 @@ def generate_users(n_users, num_sellers, products, sells_products, orders, n_car
 		newuser['mid_name'] = fake.first_name()
 		newuser['last_name'] = fake.last_name()
 		newuser['email'] = fake.email()
+
+		fEmail = fake.email()
+		while True:
+			if fEmail in email_set:
+				fEmail = fake.email()
+			else:
+				break;
+		newuser['email'] = fEmail
+		email_set.add(fEmail)
+
 		newuser['address'] = fake.address()
 		newuser['password'] = fake.password()
 		newuser['balance'] = balance
@@ -123,6 +134,7 @@ def generate_users(n_users, num_sellers, products, sells_products, orders, n_car
 
 	# Generate fake purchases
 	purchase_data = []
+	user_purchase_set = set()
 	sell_product_set = list(sell_product_set)
 	for i in range(1, orders + 1):
 		neworder = {}
@@ -134,7 +146,9 @@ def generate_users(n_users, num_sellers, products, sells_products, orders, n_car
 		timestamp = fake.date_time_this_month()
 		neworder['current_timestamp'] = timestamp.strftime('%Y-%m-%d %r')
 
-		neworder['uid'] = random.randint(1, n_users)
+		user = random.randint(1, n_users)
+		neworder['uid'] = user
+		user_purchase_set.add((user, sp[1]))
 
 		neworder['num_items'] = random.randint(1, 20)
 		neworder['fulfillment_status'] = random.choice(["Order received", "Shipped", "Delivered"])
@@ -157,10 +171,21 @@ def generate_users(n_users, num_sellers, products, sells_products, orders, n_car
 
 
 	feedback_data = []
+	feedback_keys = set()
+	user_purchase_set = list(user_purchase_set)
 	for i in range(1, n_reviews + 1):
 		newreview = {}
-		newreview['product_id'] = random.choice(product_id_set)
-		newreview['uid'] = i
+
+		purchase_by_user = random.choice(user_purchase_set)
+		while True:
+			if purchase_by_user in feedback_keys:
+				purchase_by_user = random.choice(user_purchase_set)
+			else:
+				break;
+		feedback_keys.add(purchase_by_user)
+
+		newreview['product_id'] = purchase_by_user[1]
+		newreview['uid'] = purchase_by_user[0]
 		newreview['rating'] = random.randint(1, 5)
 		newreview['review'] = fake.sentence()
 
@@ -175,8 +200,8 @@ def generate_users(n_users, num_sellers, products, sells_products, orders, n_car
 	sellerReviews_data = []
 	for i in range(1, n_seller_reviews + 1):
 		newsreview = {}
-		newsreview['uid'] = i
-		newsreview['review_id'] = random.randint(1, n_seller_reviews)
+		newsreview['uid'] = random.choice(seller_list)
+		newsreview['review_id'] = i
 		newsreview['review'] = fake.sentence()
 
 		sellerReviews_data.append(newsreview)
@@ -208,10 +233,10 @@ def main():
 	ns = 200
 	p = 500
 	sp = 1000
-	o = 500
+	o = 2500
 	nc = 500
-	nr = 500
-	nsr = 500
+	nr = 2000
+	nsr = 2000
 	generate_users(n, ns, p, sp, o, nc, nr, nsr)
 
 main()

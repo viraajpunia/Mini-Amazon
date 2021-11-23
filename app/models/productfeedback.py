@@ -24,6 +24,7 @@ AND uid = Feedback.buyer_id
                               product_id=product_id)
         return [ProductFeedback(*row) for row in rows]
 
+
     @staticmethod
     def get_all():
         rows = app.db.execute('''

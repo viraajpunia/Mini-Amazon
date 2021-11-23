@@ -45,8 +45,10 @@ WHERE product_id = :product_id
     @staticmethod
     def get_by_seller(sid):
         rows = app.db.execute('''
-SELECT *
-FROM SellProducts
+SELECT SellProducts.seller_id, SellProducts.product_id, UserInfo.first_name, UserInfo.mid_name, UserInfo.last_name
+FROM SellProducts, UserInfo
+WHERE uid = SellProducts.seller_id
+AND uid = :seller_id
 ''',
                               seller_id=sid)
         

@@ -13,19 +13,20 @@ from .models.user import User
 from .models.cart import UserCart
 from .models.useracct import UserAccount
 from .models.productfeedback import ProductFeedback
+from .models.avgratings import AvgRating
 
 
 from flask import Blueprint
 bp = Blueprint('index', __name__)
 
-@bp.route('/seller', methods=['GET', 'POST'])
-def seller():
+@bp.route('/seller/<variable>', methods=['GET', 'POST'])
+def seller(variable):
     
-    id = request.args.get('seller_id')
+    #id = request.args.get('seller_id')
 
-    userinfo = User2.get(1)
+    userinfo = User2.get(variable)
     #prods = Sellproduct.get_by_seller(10)
-    prods = Sellproduct.get_by_seller(10)
+    prods = Sellproduct.get_by_seller(variable)
     print(prods, file=sys.stderr)
     #print(userinfo.first_name, file=sys.stderr)
     
@@ -34,13 +35,13 @@ def seller():
                             user = userinfo,
                             products = prods)
 
-@bp.route('/nonsellerpublicinfo', methods=['GET', 'POST'])
-def nonsellerpublicinfo():
-    id = request.args.get('uid')
-    email = request.args.get('email')
-    password = request.args.get('password')
+@bp.route('/nonsellerpublicinfo/<variable>', methods=['GET', 'POST'])
+def nonsellerpublicinfo(variable):
+    #id = request.args.get('uid')
+    #email = request.args.get('email')
+    #password = request.args.get('password')
 
-    userinfo = User2.get(7)
+    userinfo = User2.get(variable)
     
     return render_template('nonsellerpublicinfo.html',
                             user = userinfo)
@@ -126,11 +127,13 @@ def moreInfo(variable):
     item = Product.get(variable)
     reviews = ProductFeedback.get_item_reviews(variable)
     sells_item = Sellproduct.get_by_product(variable)
+    rating = AvgRating.get_item_avg_rating(variable)
     
     return render_template('products.html',
                            product=item,
-                           sells= sells_item,
-                           reviews=reviews)
+                           sells=sells_item,
+                           reviews=reviews,
+                           rate=rating)
 
 
 
