@@ -55,7 +55,7 @@
     <span style="color: red;">[{{ error }}]</span>
     {% endfor %}
   </p>
-  <a class="btn btn-secondary" href="{{ url_for('index.newuseracctpage') }}" role="button">Register</a>
+  <p>{{ form.submit() }}</p>
 </form>
 
 {% endblock %}
