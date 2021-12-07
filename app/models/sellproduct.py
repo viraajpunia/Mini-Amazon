@@ -57,12 +57,14 @@ AND uid = :seller_id
     @staticmethod
     def get_by_seller2(sid):
         rows = app.db.execute('''
-SELECT *
-FROM SellProducts
-WHERE seller_id = seller_id
+SELECT SellProducts.seller_id, SellProducts.product_id, UserInfo.first_name, UserInfo.mid_name, UserInfo.last_name
+FROM SellProducts, UserInfo
+WHERE uid = SellProducts.seller_id
+AND uid = :seller_id
 ''',
                               seller_id=sid)
-        return [Sellproduct(*row) for row in rows]
+        
+        return [Sellproduct(*row).seller_id for row in rows]
 
 
 

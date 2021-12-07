@@ -70,6 +70,27 @@
           {% endfor %}
         </tbody>
       </table>
+      <br />
+      <h4>Submit Review:</h4>
+      <br />
+      <form action="{{ url_for('index.review', variable=product.id) }}" method="POST">
+        <div>
+          <p>Rating out of 5:</p>
+          <select id="stars" name="stars" style="background-color: #E0E4F5;">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="review">Write a Review</label>
+          <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="What did you like or dislike?" name="review">
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
     </div>
     
     <div style = "width: 50%; display: inline-block; float: right">

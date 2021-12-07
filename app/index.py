@@ -14,6 +14,7 @@ from .models.cart import UserCart
 from .models.useracct import UserAccount
 from .models.productfeedback import ProductFeedback
 from .models.avgratings import AvgRating
+from .models.review import Review
 
 
 from flask import Blueprint
@@ -134,6 +135,25 @@ def moreInfo(variable):
                            sells=sells_item,
                            reviews=reviews,
                            rate=rating)
+
+@bp.route('/review/<variable>', methods=["POST","GET"])
+def review(variable):
+    buyer_id = 1 #hardcoded, change later
+    product_id = variable
+    rating = request.form.get("stars")
+    review = request.form.get("review")
+    date = datetime.datetime.now()
+    
+    review_obj = Review.post_test(buyer_id, product_id, rating, review, date)
+    
+    title = "Thank you for leaving a review :)"
+    
+    #print(request.args.get({{rate.avg}}), file=sys.stderr)
+
+    return render_template('review.html',
+                            title=title, 
+                            content = review,
+                            rating = rating)
 
 
 
