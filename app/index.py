@@ -75,11 +75,10 @@ def newuseracctpage():
                             user = userinfo, purchase = purchase, acct  = account)
 
 
-@bp.route('/cart')
-def cart():
-    carts = UserCart.cart_by_user("1")
-    item = Product.get(5)
-    return render_template('cart.html', cartofuser = carts, product = item)
+@bp.route('/cart/<variable>', methods=['GET', 'POST'])
+def cart(variable):
+    carts = UserCart.get(variable)
+    return render_template('cart.html', cartofuser = carts)
 
 @bp.route('/order')
 def order():

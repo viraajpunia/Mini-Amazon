@@ -2,6 +2,10 @@
 
 {% block content %}
 
+
+
+  <br><br>
+{% if current_user.is_authenticated %}
 <br><br>
 
 <h2 style= "position: absolute; left: 250px">Cart</h2>
@@ -46,5 +50,8 @@
   </div>
 
   <br />
+{% else %}
+<p><a href="{{ url_for('users.login') }}">Log in</a> to see your cart!</p>
+{% endif %}
 
 {% endblock %}
