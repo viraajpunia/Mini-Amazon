@@ -27,6 +27,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.get_by_auth(form.email.data, form.password.data)
+        return redirect(url_for('index.nonsellerpublicinfo',variable=user.id))  
         if user is None:
             flash('Invalid email or password')
             return redirect(url_for('users.login'))

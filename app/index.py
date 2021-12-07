@@ -38,11 +38,11 @@ def seller(variable):
 
 @bp.route('/nonsellerpublicinfo/<variable>', methods=['GET', 'POST'])
 def nonsellerpublicinfo(variable):
-    #id = request.args.get('uid')
-    #email = request.args.get('email')
-    #password = request.args.get('password')
+    id = request.args.get('uid')
+    email = request.args.get('email')
+    password = request.args.get('password')
 
-    userinfo = User2.get(variable)
+    userinfo = User.get(variable)
     
     return render_template('nonsellerpublicinfo.html',
                             user = userinfo)

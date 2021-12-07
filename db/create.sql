@@ -12,11 +12,11 @@ CREATE TABLE UserInfo (
     PRIMARY KEY (uid)
 );
 
---CREATE TABLE UserAcc (
---    uid INT NOT NULL PRIMARY KEY,
---    balance FLOAT NOT NULL,
---    FOREIGN KEY (uid) REFERENCES UserInfo(uid)
---);
+CREATE TABLE UserAcc (
+    uid INT NOT NULL PRIMARY KEY,
+    balance FLOAT NOT NULL,
+    FOREIGN KEY (uid) REFERENCES UserInfo(uid)
+);
 
 CREATE TABLE Seller (
     uid INT NOT NULL PRIMARY KEY,
