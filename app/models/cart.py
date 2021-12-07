@@ -41,4 +41,7 @@ class UserCart:
         FROM UserCarts
         WHERE uid = :uid
         """, uid = uid)
-        return UserCart(*(rows[0])) if rows else None
+        return [UserCart(*row) for row in rows]
+        #return UserCart(*(rows[0])) if rows else None
+
+

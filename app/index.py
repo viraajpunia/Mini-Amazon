@@ -79,6 +79,7 @@ def newuseracctpage():
 @bp.route('/cart/<variable>', methods=['GET', 'POST'])
 def cart(variable):
     carts = UserCart.get(variable)
+    #carts = Product.get_all(True)
     return render_template('cart.html', cartofuser = carts)
 
 @bp.route('/order')

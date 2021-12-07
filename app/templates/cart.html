@@ -3,55 +3,31 @@
 {% block content %}
 
 
-
-  <br><br>
-{% if current_user.is_authenticated %}
-<br><br>
-
-<h2 style= "position: absolute; left: 250px">Cart</h2>
+<h2 style= "position: relative; left: 50px">Cart:</h2>
 <br />
-<div style = "position: absolute; top: 140px; left: 1300px;">
-    <a class="btn btn-secondary" href="{{ url_for('index.order') }}" role="button">Checkout</a>
-</div>
-<br><br>
-<br />
-  <div style= "width: 90%; height: 230px; padding: 20px; margin: auto; border-style: solid; border-width: 1px; border-color: #D1D5DB; background-color: #E8EAED">
+<table class='table table-hover table-bordered container' style = "width: 80%">
+  <tbody>
+    {% for item in cartofuser %}
+      <tr style= "height: 150px">
+        <td>
+          <div class="column" style="width: 60%; display: inline-block;">
+            <div style="display: block">
+              <p style="font-size: 18px; font-weight: bold; text-align: left; float: left; width: 100%">
+                {{item.uid}} 
+                {{item.product_id}} 
+                {{item.seller_id}} 
+                {{item.quantity}} 
+              </p>
+            </div>
+          </div>
 
-      <div class="column" style="width: 20%; display: inline-flex; margin-right: 20px">
-        <img src="https://www.gardendesign.com/pictures/images/675x529Max/site_3/helianthus-yellow-flower-pixabay_11863.jpg" alt="Rose" style="object-position: 0 0; object-fit: cover; max-width: 100%; max-height: 130px; margin: auto;">
-      </div>
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
-      <div class="column" style="width: 60%; display: inline-block;">
-        <div style="display: block">
-          <p style="font-size: 18px; font-weight: bold; text-align: left; float: left; width: 100%">
-            {{product.name}} 
-          </p>
-        </div>
-        <div style="display: block">
-          <p style="font-size: 16px; font-weight: normal; text-align: left; float: left;">
-            {{product.descrip}}
-          </p>
-          <p>
-            Quantity: 6
-          </p>
-        </div>
-      </div>
 
-      <div class="column" style="width: 15%; display: inline-block;">
-        <div style="width: 80px; height: 80px; margin-bottom: 60px; background-color: #D6E5E3; display: inline-block; float: right">
-          <p style="text-align: center; font-size: 13px; position: relative; top: 40%;"> 
-            ${{product.price}} 
-          </p>
-          <p style="text-align: center; font-size: 13px; position: relative; top: 80%;"> 
-            Category: {{product.category}} 
-          </p>
-        </div>
-      </div>
-  </div>
 
-  <br />
-{% else %}
-<p><a href="{{ url_for('users.login') }}">Log in</a> to see your cart!</p>
-{% endif %}
 
 {% endblock %}
