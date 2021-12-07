@@ -27,14 +27,20 @@ def seller(variable):
 
     userinfo = User2.get(variable)
     #prods = Sellproduct.get_by_seller(10)
-    prods = Sellproduct.get_by_seller(variable)
-    print(prods, file=sys.stderr)
-    #print(userinfo.first_name, file=sys.stderr)
-    
-    
+    prods = Sellproduct.get_by_seller(variable) #prods returns all of the product_ids
+
+    seller_products = []
+
+    for prod in prods:
+        product_id = prod.product_id
+        #print(product_id, file=sys.stderr)
+        product_obj = Product.get(product_id)
+        seller_products.append(product_obj)
+        #print(product_obj, file=sys.stderr)
+
     return render_template('seller.html',
                             user = userinfo,
-                            products = prods)
+                            products = seller_products)
 
 @bp.route('/nonsellerpublicinfo/<variable>', methods=['GET', 'POST'])
 def nonsellerpublicinfo(variable):
@@ -144,11 +150,9 @@ def review(variable):
     review = request.form.get("review")
     date = datetime.datetime.now()
     
-    review_obj = Review.post_test(buyer_id, product_id, rating, review, date)
+    #Review.post_rating(buyer_id, product_id, rating, review, date)
     
     title = "Thank you for leaving a review :)"
-    
-    #print(request.args.get({{rate.avg}}), file=sys.stderr)
 
     return render_template('review.html',
                             title=title, 

@@ -13,7 +13,9 @@ class Review:
     def post_rating(buyer_id, product_id, rating, review, date):
         rows = app.db.execute('''
 INSERT INTO Feedback 
-VALUES (b_id, p_id, rat, rev, dat)
+VALUES (:b_id, :p_id, :rat, :rev, :dat
+)
+returning *
 ''',
                               b_id=buyer_id,
                               p_id=product_id,

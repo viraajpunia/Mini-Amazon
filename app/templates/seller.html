@@ -6,7 +6,7 @@
 
 
 <div class="row">
-  <div class="col-md-8 column well">
+  <div style="width:800px; margin:0 auto;">
 
     <h1>{{ user.first_name }} {{ user.mid_name }} {{ user.last_name}}</h1>
     <h4>
@@ -18,25 +18,29 @@
         {{user.address}}
       </p>
     </h3>
+  <br />
   
-  </div>
   <div class="column">
-    <h1>Reviews</h1>
-    <h2>Average Seller Rating:</h2>
-    <h2>Products</h2>
+    
+      <h1>Reviews</h1>
+      <h4>Average Seller Rating:</h4>
+      <h4>Products</h4>
+
+    
     <tbody>
       {% for prod in products%}
         <tr style= "height: 100px">
           <td>
             <div>
         
-              <p> {{ prod.product_id }} </p>
+              <p> {{ prod.name }} </p>
             </div>
           </td>
         </tr>
       {% endfor %}
     </tbody>
   </div>
+</div>
 </div>
 
 

@@ -70,7 +70,6 @@ CREATE TABLE UserCarts (
     FOREIGN KEY (uid) REFERENCES UserInfo(uid)
 );
 
--- Is feedback for a product or for a product by a seller. Might be easier to just do product since we have a separate seller feedback
 CREATE TABLE Feedback (
     buyer_id INT NOT NULL,
     product_id INT NOT NULL,
