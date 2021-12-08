@@ -45,27 +45,18 @@ ORDER BY price DESC
         rows = app.db.execute('''
 SELECT product_id, category, name, descrip, img_link, price, available
 FROM Products
-WHERE name = :name
+WHERE name = :name OR descrip LIKE '%' || :name || '%'
 ''',
                               name=name)
         return [Product(*row) for row in rows]
 
-    @staticmethod
-    def get_item_keyword(name):
-        rows = app.db.execute('''
-SELECT product_id, category, name, descrip, img_link, price, available
-FROM Products
-WHERE descrip LIKE '%:name%'
-''',
-                              name=name)
-        return [Product(*row) for row in rows]
 
     @staticmethod
     def get_item_sorted(name):
         rows = app.db.execute('''
 SELECT product_id, category, name, descrip, img_link, price, available
 FROM Products
-WHERE name = :name
+WHERE name = :name OR descrip LIKE '%' || :name || '%'
 ORDER BY price DESC
 ''',
                               name=name)
@@ -98,7 +89,7 @@ ORDER BY price DESC
 SELECT product_id, category, name, descrip, img_link, price, available
 FROM Products
 WHERE category = :category
-AND name = :name
+AND (name = :name OR descrip LIKE '%' || :name || '%')
 ''',
                               name=name, category=category)
         return [Product(*row) for row in rows]
@@ -109,7 +100,7 @@ AND name = :name
 SELECT product_id, category, name, descrip, img_link, price, available
 FROM Products
 WHERE category = :category
-AND name = :name
+AND (name = :name OR descrip LIKE '%' || :name || '%')
 ORDER BY price DESC
 ''',
                               name=name, category=category)

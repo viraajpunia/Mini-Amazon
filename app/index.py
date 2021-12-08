@@ -35,7 +35,6 @@ def truncate(num,n):
 @bp.route('/seller/<variable>', methods=['GET', 'POST'])
 def seller(variable):
     seller_id = variable
-
     #Get associated seller reviews
     reviews = SellerFeedback.get_by_uid(seller_id)
     #print(reviews, file=sys.stderr)
@@ -325,7 +324,7 @@ def search():
         else:
             matches = Product.get_item_in_category(name, category)
             if sort == "price":
-                matches = Product.get_category_sorted(category)
+                matches = Product.get_item_in_category_sorted(name, category)
 
     return render_template('index.html',
                            avail_products=matches,
