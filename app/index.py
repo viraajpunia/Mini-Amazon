@@ -16,6 +16,7 @@ from .models.productfeedback import ProductFeedback
 from .models.avgratings import AvgRating
 from .models.review import Review
 from .models.sellerfeedback import SellerFeedback
+from .models.addtocart import addtocart
 
 
 from flask import Blueprint
@@ -112,7 +113,16 @@ def newuseracctpage():
 def cart(variable):
     carts = UserCart.get(variable)
     #carts = Product.get_all(True)
+    uid = current_user.id
+    num = request.args.get("num")
+    product_id = request.args.get("product_id")
+    seller_id = request.args.get("seller_id")
+    print(num, file=sys.stderr)
+    print(product_id, file=sys.stderr)
+    print(seller_id, file=sys.stderr)
+    #addtocart.addtocart(uid, product_id, seller_id, num)
     return render_template('cart.html', cartofuser = carts)
+
 
 @bp.route('/order')
 def order():
