@@ -42,7 +42,7 @@
 <div style= "position:absolute; top: 200px; left: 800px; width: 600px; height: 300px; padding: 20px; margin: auto; border-style: solid; border-width: 1px; border-color: #D1D5DB; background-color: #E8EAED"></div>
 <div style="position: absolute; top: 340px; left: 850px">
     <p style="font-size: 18px; font-weight: normal; text-align: left; float: left;">
-      Subtotal: 
+      Current Balance: ${{balance}}
     </p>
 </div>
 
@@ -52,7 +52,7 @@
     </p>
 </div>
 <div style = "position: absolute; top: 252px; left: 1150px;">
-    <input type="text" placeholder="Promo Code" name="item" />
+    <input type="text" placeholder="Promo Code" name="usercode" />
 </div>
 <div style = "position: absolute; top: 245px; left: 845px;">
     <select id="categories" name="categories">
@@ -62,6 +62,13 @@
         <option value="Two Day Shipping - $8.99">Two Day Shipping - $8.99</option>
         <option value="One Day Shipping - $11.99">One Day Shipping - $11.99</option>
     </select>
+</div>
+<div style = "position: absolute; top: 300px; left: 1200px;">
+  <button class="btn btn-secondary" type="submit" name="promo" value=True>
+    <span class="glyphicon glyphicon-trash">
+
+    </span> Update
+  </button> 
 </div>
 <div style = "position: absolute; top: 415px; left: 1200px;">
     <a class="btn btn-secondary" href="{{ url_for('index.submitted') }}" role="button">Submit Order</a>

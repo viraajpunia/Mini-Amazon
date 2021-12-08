@@ -253,8 +253,9 @@ def cart():
         n = int(checked[0].quantity) + int(num)
         addtocart.update(uid, product_id, seller_id, n)
     carts = UserCart.get(uid)
-
-    return render_template('cart.html', cartofuser = carts)
+    price = [float(i.price)*float(i.quantity) for i in carts]
+    total = sum(price)
+    return render_template('cart.html', cartofuser = carts, product = truncate(total,2))
 
 @bp.route('/cartdisplay', methods=['GET', 'POST'])
 def cartdisplay():
@@ -262,23 +263,39 @@ def cartdisplay():
     
     product_id = request.form.get("product_id")
     seller_id = request.form.get("seller_id")
+    num = request.form.get("num")
     print(product_id,file=sys.stderr)
 
-
-    
+    plus = request.form.get("plus")
+    if plus == "True":
+        n = int(num)+1
+        addtocart.update(uid, product_id, seller_id, str(n))
+    minus = request.form.get("minus")
+    if minus == "True":
+        n = int(num)-1
+        addtocart.update(uid, product_id, seller_id, str(n))
+        if n==0:
+            addtocart.delete_from_cart(uid, product_id, seller_id)
     delete = request.form.get("delete1")
     if delete == "True":
        addtocart.delete_from_cart(uid, product_id, seller_id)
     carts = UserCart.get(uid)
-    return render_template('cart.html', cartofuser = carts)
+    price = [float(i.price)*float(i.quantity) for i in carts]
+    total = sum(price)
+    return render_template('cart.html', cartofuser = carts, product = truncate(total,2))
 
 
 @bp.route('/order')
 def order():
     items = UserCart.get(current_user.id)
     price = [float(i.price)*float(i.quantity) for i in items]
+    balance = items[0].balance
     total = sum(price)
-    return render_template('order.html', product = truncate(total,2))
+    promo = request.form.get("promo")
+    usercode = request.args.get("usercode")
+    if (promo=="True" and (usercode=="20-OFF" or usercode=="HOLIDAYS")):
+        total = total*0.80
+    return render_template('order.html', product = truncate(total,2), balance = balance)
 
 @bp.route('/submitted')
 def submitted():
