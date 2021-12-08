@@ -11,17 +11,90 @@
       <br />
       <br />
       <p>
-        Name:
-        {{ user.first_name}} {{ user.mid_name}} {{ user.last_name}}
+        First Name:
+        {{ user.first_name}} 
+        <form action="{{ url_for('index.updateuserinfo', variable=current_user.id) }}" method="POST" >
+                      
+          <div class="form-group">
+            <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="Edit value" name="editfirstname">
+          </div>
+          <button class="btn btn-danger" type="submit" name="editfirstnamebutton" value=True>
+            <span class="glyphicon glyphicon-trash">
+        
+            </span> Submit Edit Value
+          </button> 
+        </form>
+        <br/>
+        Middle Name:
+        {{ user.mid_name}} 
+        <form action="{{ url_for('index.updateuserinfo', variable=current_user.id) }}" method="POST" >
+                      
+          <div class="form-group">
+            <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="Edit value" name="editmiddlename">
+          </div>
+          <button class="btn btn-danger" type="submit" name="editmiddlenamebutton" value=True>
+            <span class="glyphicon glyphicon-trash">
+        
+            </span> Submit Edit Value
+          </button> 
+        </form>
+        <br/>
+        Last Name:
+        {{ user.last_name}}
+        <form action="{{ url_for('index.updateuserinfo', variable=current_user.id) }}" method="POST" >
+                      
+          <div class="form-group">
+            <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="Edit value" name="editlastname">
+          </div>
+          <button class="btn btn-danger" type="submit" name="editlastnamebutton" value=True>
+            <span class="glyphicon glyphicon-trash">
+        
+            </span> Submit Edit Value
+          </button> 
+        </form>
+        <br/>
       </p>
       <p>Email:
         {{user.email}}
+        <form action="{{ url_for('index.updateuserinfo', variable=current_user.id) }}" method="POST" >
+                      
+          <div class="form-group">
+            <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="Edit value" name="editemail">
+          </div>
+          <button class="btn btn-danger" type="submit" name="editemailbutton" value=True>
+            <span class="glyphicon glyphicon-trash">
+        
+            </span> Submit Edit Value
+          </button> 
+        </form>
       </p>
       <p>Address:
         {{user.address}}
+        <form action="{{ url_for('index.updateuserinfo', variable=current_user.id) }}" method="POST" >
+                      
+          <div class="form-group">
+            <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="Edit value" name="editaddress">
+          </div>
+          <button class="btn btn-danger" type="submit" name="editaddressbutton" value=True>
+            <span class="glyphicon glyphicon-trash">
+        
+            </span> Submit Edit Value
+          </button> 
+        </form>
       </p>
       <p>Balance:
         ${{user.balance}}
+        <form action="{{ url_for('index.updateuserinfo', variable=current_user.id) }}" method="POST" >
+                      
+          <div class="form-group">
+            <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="Edit value" name="editbalance">
+          </div>
+          <button class="btn btn-danger" type="submit" name="editbalancebutton" value=True>
+            <span class="glyphicon glyphicon-trash">
+        
+            </span> Submit Edit Value
+          </button> 
+        </form>
       </p>
       <p>Account Id:
         {{user.id}}
@@ -39,10 +112,7 @@
       {{item.order_id}}
       <br />
       Seller ID:
-      {{item.seller_id}}#####
-      <br />
-      Total Price:
-      {{item.total_price}}######
+      {{item.seller_id}}
       <br />
       Quantity:
       {{item.num_items}}
@@ -62,5 +132,6 @@
 <a class="btn btn-secondary" href="{{ url_for('index.nonsellerpublicinfo', variable = user.id) }}" role="button">Public View</a>
 <a class="btn btn-secondary" role="button">Add Balance</a>
 <a class="btn btn-secondary" role="button">Withdraw Balance</a>
+
 
 {% endblock %}

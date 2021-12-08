@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import current_user
 import datetime
 import sys
@@ -108,6 +108,56 @@ def newuseracctpage(variable):
     return render_template('newuseracctpage.html',
                             user = userinfo, purchase = purchase, acct  = account)
 
+@bp.route('/updateuserinfo/<variable>', methods=['GET', 'POST'])
+def updateuserinfo(variable):
+
+    
+    newfirstname = request.form.get("editfirstname")
+    editfirstname = request.form.get("editfirstnamebutton")
+    if editfirstname == "True":
+        User.updatefirstname(current_user.id, newfirstname)
+
+    newmiddlename = request.form.get("editmiddlename")
+    editmiddlename = request.form.get("editmiddlenamebutton")
+    if editmiddlename == "True":
+        User.updatemiddlename(current_user.id, newmiddlename)
+
+    newlastname = request.form.get("editlastname")
+    editlastname = request.form.get("editlastnamebutton")
+    if editlastname == "True":
+        User.updatelastname(current_user.id, newlastname)
+
+    newlastname = request.form.get("editlastname")
+    editlastname = request.form.get("editlastnamebutton")
+    if editlastname == "True":
+        User.updatelastname(current_user.id, newlastname)
+
+    newemail = request.form.get("editemail")
+    editemail = request.form.get("editemailbutton")
+    if editemail == "True" and not(User.email_exists(newemail)):
+        User.updateemail(current_user.id, newemail)
+
+    newaddress = request.form.get("editaddress")
+    editaddress = request.form.get("editaddressbutton")
+    if editaddress == "True":
+        User.updateaddress(current_user.id, newaddress)
+
+    newbalance = request.form.get("editbalance")
+    editbalance = request.form.get("editbalancebutton")
+    if editbalance == "True":
+        User.updatebalance(current_user.id, newbalance)
+
+    id = request.args.get('uid')
+    email = request.args.get('email')
+    password = request.args.get('password')
+
+    userinfo = User.get(variable)
+    purchase = Purchase.get_all_by_uid(variable)
+    account = UserAccount.get(variable)
+        
+    return render_template('newuseracctpage.html',
+                           user = userinfo, purchase = purchase, acct  = account)
+
 
 @bp.route('/cart', methods=['GET', 'POST'])
 def cart():
@@ -146,12 +196,14 @@ def index():
     if current_user.is_authenticated:
         purchases = Purchase.get_all_by_uid_since(
             current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
+        isSeller = User.is_seller(current_user.id)
     else:
         purchases = None
+        isSeller = False
     # render the page by adding information to the index.html file
     return render_template('index.html',
                            avail_products=products,
-                           purchase_history=purchases)
+                           purchase_history=purchases, isSeller = isSeller)
 
 
 @bp.route('/search', methods=['GET', 'POST'])
