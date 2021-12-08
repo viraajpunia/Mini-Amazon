@@ -117,11 +117,19 @@ def cart():
     num = request.args.get("num")
     product_id = request.args.get("product_id")
     seller_id = request.args.get("seller_id")
+    delete = request.form.get("delete1")
+    #if delete == "True":
+        #addtocart.delete_from_cart(uid, product_id, seller_id, num)
     print(num, file=sys.stderr)
     print(product_id, file=sys.stderr)
     print(seller_id, file=sys.stderr)
     #if product_id not in 
-    addtocart.addtocart(uid, product_id, seller_id, num)
+    checked = addtocart.check(uid, product_id, seller_id)
+    if len(checked) == 0:
+        addtocart.addtocart(uid, product_id, seller_id, num)
+    else:
+        n = int(checked[0].quantity) + int(num)
+        addtocart.update(uid, product_id, seller_id, n)
     carts = UserCart.get(uid)
 
     return render_template('cart.html', cartofuser = carts)
@@ -129,14 +137,32 @@ def cart():
 @bp.route('/cartdisplay', methods=['GET', 'POST'])
 def cartdisplay():
     uid = current_user.id
+    
+    product_id = request.form.get("product_id")
+    seller_id = request.form.get("seller_id")
+    print(product_id,file=sys.stderr)
+
+
+    
+    delete = request.form.get("delete1")
+    if delete == "True":
+       addtocart.delete_from_cart(uid, product_id, seller_id)
     carts = UserCart.get(uid)
     return render_template('cart.html', cartofuser = carts)
 
 
 @bp.route('/order')
 def order():
-    item = Product.get(5)
-    return render_template('order.html', product = item)
+    items = UserCart.get(current_user.id)
+    price = [float(i.price)*float(i.quantity) for i in items]
+    total = sum(price)
+    return render_template('order.html', product = truncate(total,2))
+
+@bp.route('/submitted')
+def submitted():
+    uid = current_user.id
+    addtocart.delete_cart(uid)
+    return render_template('submitted.html')
 
 @bp.route('/')
 def index():
