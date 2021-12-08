@@ -31,8 +31,8 @@ WHERE uid = :uid
 SELECT  order_id, seller_id, product_id, date, uid, num_items, fulfillment_status
 FROM Purchases
 WHERE uid = :uid
-AND current_timestamp >= :since
-ORDER BY current_timestamp DESC
+AND date >= :since
+ORDER BY date DESC
 ''',
                               uid=uid,
                               since=since)
@@ -44,7 +44,7 @@ ORDER BY current_timestamp DESC
 SELECT  order_id, seller_id, product_id, date, uid, num_items, fulfillment_status
 FROM Purchases
 WHERE uid = :uid
-ORDER BY current_timestamp DESC
+ORDER BY date DESC
 ''',
                               uid=uid)
         return [Purchase(*row) for row in rows]
