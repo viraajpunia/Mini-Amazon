@@ -60,10 +60,34 @@
                   </p>
                   <p style = "display: inline-block; font-size: 18px; font-weight: bold; padding-top: 8px; float: right; margin-right: 10px">
                     Rating: {{review.rating}}
+                    <br />
+                    
+
+
+                    
                   </p>
                   <p>
                     {{review.review}}
                   </p>
+                  {% if current_user.is_authenticated and current_user.id == review.buyer_id %}
+                    <form action="{{ url_for('index.moreInfo', variable=current_user.id) }}" method="POST" >
+                      
+                      <div class="form-group">
+                        <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="Edit your review" name="edit_review">
+                      </div>
+                      <button class="btn btn-danger" type="submit" name="delete" value=True>
+                        <span class="glyphicon glyphicon-trash">
+
+                        </span> Delete
+                      </button> 
+                      <button class="btn btn-danger" type="submit" name="edit" value=True>
+                        <span class="glyphicon glyphicon-trash">
+
+                        </span> Submit Edited Review
+                      </button> 
+                    </form>
+                    {% endif %}
+                 
                 </div>
               </td>
             </tr>
