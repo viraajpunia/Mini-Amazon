@@ -7,7 +7,7 @@ from .. import login
 
 class User(UserMixin):
     def __init__(self, uid, first_name, mid_name, last_name,
-                email, address, password):
+                email, address, password, balance):
         self.id = uid
         self.first_name = first_name
         self.mid_name = mid_name
@@ -15,11 +15,12 @@ class User(UserMixin):
         self.email = email
         self.address = address
         self.password = password
+        self.balance = balance
 
     @staticmethod
     def get_by_auth(email, password):
         rows = app.db.execute("""
-SELECT uid, first_name, mid_name, last_name, email, address, password
+SELECT uid, first_name, mid_name, last_name, email, address, password, balance
 FROM UserInfo
 WHERE email = :email
 """,
@@ -78,9 +79,112 @@ RETURNING uid
     @login.user_loader
     def get(uid):
         rows = app.db.execute("""
-SELECT uid, first_name, mid_name, last_name, email, address, password
+SELECT uid, first_name, mid_name, last_name, email, address, password, balance
 FROM UserInfo
 WHERE uid = :uid
 """,
                               uid=uid)
         return User(*(rows[0])) if rows else None
+
+
+    @staticmethod
+    def updatefirstname(uid, first_name):
+        rows = app.db.execute('''
+UPDATE UserInfo
+SET first_name =:first_name
+WHERE uid =:uid
+returning *
+''',
+                              uid=uid,
+                              first_name=first_name)
+
+
+        return None
+
+
+    @staticmethod
+    def updatemiddlename(uid, mid_name):
+        rows = app.db.execute('''
+UPDATE UserInfo
+SET mid_name =:mid_name
+WHERE uid =:uid
+returning *
+''',
+                              uid=uid,
+                              mid_name=mid_name)
+
+
+        return None
+
+
+    @staticmethod
+    def updatelastname(uid, last_name):
+        rows = app.db.execute('''
+UPDATE UserInfo
+SET last_name =:last_name
+WHERE uid =:uid
+returning *
+''',
+                              uid=uid,
+                              last_name=last_name)
+
+
+        return None
+
+    @staticmethod
+    def updateemail(uid, email):
+        rows = app.db.execute('''
+UPDATE UserInfo
+SET email =:email
+WHERE uid =:uid
+returning *
+''',
+                              uid=uid,
+                              email=email)
+
+
+        return None
+
+    @staticmethod
+    def updateaddress(uid, address):
+        rows = app.db.execute('''
+UPDATE UserInfo
+SET address =:address
+WHERE uid =:uid
+returning *
+''',
+                              uid=uid,
+                              address=address)
+
+
+        return None
+
+    
+    @staticmethod
+    def updatebalance(uid, balance):
+        rows = app.db.execute('''
+UPDATE UserInfo
+SET balance =:balance
+WHERE uid =:uid
+AND balance >= :balance
+returning *
+''',
+                              uid=uid,
+                              balance=balance)
+
+
+        return None
+
+    @staticmethod
+    def updatepassword(uid, password):
+        rows = app.db.execute('''
+UPDATE UserInfo
+SET password =:password
+WHERE uid =:uid
+returning *
+''',
+                              uid=uid,
+                              password=password)
+
+
+        return None
