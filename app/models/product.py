@@ -51,6 +51,16 @@ WHERE name = :name
         return [Product(*row) for row in rows]
 
     @staticmethod
+    def get_item_keyword(name):
+        rows = app.db.execute('''
+SELECT product_id, category, name, descrip, img_link, price, available
+FROM Products
+WHERE descrip LIKE '%:name%'
+''',
+                              name=name)
+        return [Product(*row) for row in rows]
+
+    @staticmethod
     def get_item_sorted(name):
         rows = app.db.execute('''
 SELECT product_id, category, name, descrip, img_link, price, available

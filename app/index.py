@@ -319,6 +319,7 @@ def search():
     else:
         if category == "All":
             matches = Product.get_item(name)
+            #matches = Product.get_item_keyword(name)
             if sort == "price":
                 matches = Product.get_item_sorted(name)
         else:
