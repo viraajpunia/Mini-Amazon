@@ -48,3 +48,15 @@ ORDER BY current_timestamp DESC
 ''',
                               uid=uid)
         return [Purchase(*row) for row in rows]
+
+#get the sellers this uid has bought from 
+    @staticmethod
+    def get_sellers_by_uid(uid):
+        rows = app.db.execute('''
+SELECT  seller_id
+FROM Purchases
+WHERE uid = :uid
+''',
+                              uid=uid)
+        return [int(row[0]) for row in rows]
+
