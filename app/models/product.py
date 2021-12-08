@@ -61,6 +61,37 @@ AND name = :name
                               name=name, category=category)
         return [Product(*row) for row in rows]
 
+    @staticmethod
+    def add_item(product_id, name, category, descrip, img_link, price, available = True):
+        rows = app.db.execute('''
+INSERT INTO Products
+VALUES(:product_id, :category, :name, :descrip, :img_link, :price, :available)
+returning *
+''',
+                              product_id=product_id,
+                              name=name,
+                              category=category,
+                              descrip=descrip,
+                              img_link=img_link,
+                              price=price,
+                              available=available)
+        return None
+
+    @staticmethod
+    def edit_item(name, category, descrip, img_link, price):
+        rows = app.db.execute('''
+UPDATE Products
+SET category = :category, descrip = :descrip, img_link = :img_link, price = :price)
+WHERE name = :name
+returning *
+''',
+                              name=name,
+                              category=category,
+                              descrip=descrip,
+                              img_link=img_link,
+                              price=price)
+        return None
+
 
 
 

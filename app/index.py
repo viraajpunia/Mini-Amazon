@@ -36,8 +36,6 @@ def truncate(num,n):
 def seller(variable):
     seller_id = variable
 
-    
-    
     #Get associated seller reviews
     reviews = SellerFeedback.get_by_uid(seller_id)
     #print(reviews, file=sys.stderr)
@@ -221,6 +219,136 @@ def review(variable):
 
 
 
+@bp.route('/additem', methods=['GET', 'POST'])
+def additem():
+    name = request.args.get("name")
+    category = request.args.get("category")
+    descrip = request.args.get("descrip")
+    img_link = request.args.get("img_link")
+    price = request.args.get("price")
+
+    total_items = Product.get_all()
+
+    Product.add_item(len(total_items), name, category, descrip, img_link, price)
+    Sellproduct.add_sell_item(current_user.id, len(total_items))
+
+    seller_id = current_user.id
+
+    #Get associated seller reviews
+    reviews = SellerFeedback.get_by_uid(seller_id)
+    #print(reviews, file=sys.stderr)
+
+    #Get associated seller products
+    userinfo = User2.get(seller_id)
+    prods = Sellproduct.get_by_seller(seller_id) #prods returns all of the product_ids
+
+    seller_products = []
+
+    #Get average rating
+    avg = 0
+
+    for prod in prods:
+        product_id = prod.product_id
+        #print(product_id, file=sys.stderr)
+        product_obj = Product.get(product_id)
+        seller_products.append(product_obj)
+        #print(product_obj, file=sys.stderr)
+
+        ratings = [p.rating for p in ProductFeedback.get_item_reviews(product_id)]
+        if len(ratings) != 0:
+            avg += sum(ratings)/(len(ratings)*5)
+
+    return render_template('seller.html',
+                            user = userinfo,
+                            products = seller_products,
+                            reviews = reviews,
+                            avg = truncate(avg,2))
+
+'''
+@bp.route('/edit', method=['GET', 'POST'])
+def edit():
+    name = request.args.get("name")
+    category = request.args.get("category")
+    descrip = request.args.get("descrip")
+    img_link = request.args.get("img_link")
+    price = request.args.get("price")
+
+    Product.edit_item(name, category, descrip, img_link, price)
+
+    seller_id = current_user.id
+
+    #Get associated seller reviews
+    reviews = SellerFeedback.get_by_uid(seller_id)
+    #print(reviews, file=sys.stderr)
+
+    #Get associated seller products
+    userinfo = User2.get(seller_id)
+    prods = Sellproduct.get_by_seller(seller_id) #prods returns all of the product_ids
+
+    seller_products = []
+
+    #Get average rating
+    avg = 0
+
+    for prod in prods:
+        product_id = prod.product_id
+        #print(product_id, file=sys.stderr)
+        product_obj = Product.get(product_id)
+        seller_products.append(product_obj)
+        #print(product_obj, file=sys.stderr)
+
+        ratings = [p.rating for p in ProductFeedback.get_item_reviews(product_id)]
+        if len(ratings) != 0:
+            avg += sum(ratings)/(len(ratings)*5)
+
+    return render_template('seller.html',
+                            user = userinfo,
+                            products = seller_products,
+                            reviews = reviews,
+                            avg = truncate(avg,2))
+'''
+'''
+@bp.route('/remove', methods=['GET', 'POST'])
+def remove():
+    name = request.args.get("name")
+
+    prod_by_name = Product.get_item(name)
+    #print(prod_by_name, file=sys.stderr)
+
+    #pid = prod_by_name[0].product_id
 
 
+    Sellproduct.delete_sell_item(current_user.id, pid)
 
+    seller_id = current_user.id
+
+    #Get associated seller reviews
+    reviews = SellerFeedback.get_by_uid(seller_id)
+    #print(reviews, file=sys.stderr)
+
+    #Get associated seller products
+    userinfo = User2.get(seller_id)
+    prods = Sellproduct.get_by_seller(seller_id) #prods returns all of the product_ids
+
+    seller_products = []
+
+    #Get average rating
+    avg = 0
+
+    for prod in prods:
+        product_id = prod.product_id
+        #print(product_id, file=sys.stderr)
+        product_obj = Product.get(product_id)
+        seller_products.append(product_obj)
+        #print(product_obj, file=sys.stderr)
+
+        ratings = [p.rating for p in ProductFeedback.get_item_reviews(product_id)]
+        if len(ratings) != 0:
+            avg += sum(ratings)/(len(ratings)*5)
+
+    return render_template('seller.html',
+                            user = userinfo,
+                            products = seller_products,
+                            reviews = reviews,
+                            avg = truncate(avg,2))
+'''

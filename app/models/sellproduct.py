@@ -66,6 +66,28 @@ AND uid = :seller_id
         
         return [Sellproduct(*row).seller_id for row in rows]
 
+    @staticmethod
+    def add_sell_item(sid, pid):
+        rows = app.db.execute('''
+            INSERT INTO SellProducts
+            VALUES(:seller_id, :product_id)
+            returning *
+''',
+                              seller_id=sid,
+                              product_id=pid)
+        
+        return None
 
+    @staticmethod
+    def delete_sell_item(sid, pid):
+        rows = app.db.execute('''
+            DELETE FROM SellProducts
+            WHERE seller_id = :seller_id
+            AND product_id = :product_id
+            returning *
+''',
+                              seller_id=sid,
+                              product_id=pid)
+        return None
 
 
