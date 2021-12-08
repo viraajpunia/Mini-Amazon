@@ -168,7 +168,6 @@ returning *
 UPDATE UserInfo
 SET balance =:balance
 WHERE uid =:uid
-AND balance >= :balance
 returning *
 ''',
                               uid=uid,
