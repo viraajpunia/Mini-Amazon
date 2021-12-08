@@ -31,11 +31,32 @@ FROM Products
         return [Product(*row) for row in rows]
 
     @staticmethod
+    def get_all_sorted(available=True):
+        rows = app.db.execute('''
+SELECT product_id, category, name, descrip, img_link, price, available
+FROM Products
+ORDER BY price DESC
+''',
+                              available=available)
+        return [Product(*row) for row in rows]
+
+    @staticmethod
     def get_item(name):
         rows = app.db.execute('''
 SELECT product_id, category, name, descrip, img_link, price, available
 FROM Products
 WHERE name = :name
+''',
+                              name=name)
+        return [Product(*row) for row in rows]
+
+    @staticmethod
+    def get_item_sorted(name):
+        rows = app.db.execute('''
+SELECT product_id, category, name, descrip, img_link, price, available
+FROM Products
+WHERE name = :name
+ORDER BY price DESC
 ''',
                               name=name)
         return [Product(*row) for row in rows]
@@ -51,12 +72,35 @@ WHERE category = :category
         return [Product(*row) for row in rows]
 
     @staticmethod
+    def get_category_sorted(category):
+        rows = app.db.execute('''
+SELECT product_id, category, name, descrip, img_link, price, available
+FROM Products
+WHERE category = :category
+ORDER BY price DESC
+''',
+                              category=category)
+        return [Product(*row) for row in rows]
+
+    @staticmethod
     def get_item_in_category(name, category):
         rows = app.db.execute('''
 SELECT product_id, category, name, descrip, img_link, price, available
 FROM Products
 WHERE category = :category
 AND name = :name
+''',
+                              name=name, category=category)
+        return [Product(*row) for row in rows]
+
+    @staticmethod
+    def get_item_in_category_sorted(name, category):
+        rows = app.db.execute('''
+SELECT product_id, category, name, descrip, img_link, price, available
+FROM Products
+WHERE category = :category
+AND name = :name
+ORDER BY price DESC
 ''',
                               name=name, category=category)
         return [Product(*row) for row in rows]

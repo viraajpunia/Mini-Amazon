@@ -237,16 +237,25 @@ def index():
 def search():
     name = request.args.get("item")
     category = request.args.get("categories")
+    sort = request.args.get("sort")
     if name == "":
         if category == "All":
             matches = Product.get_all(True)
+            if sort == "price":
+                matches = Product.get_all_sorted(True)
         else:
             matches = Product.get_category(category)
+            if sort == "price":
+                matches = Product.get_category_sorted(category)
     else:
         if category == "All":
             matches = Product.get_item(name)
+            if sort == "price":
+                matches = Product.get_item_sorted(name)
         else:
             matches = Product.get_item_in_category(name, category)
+            if sort == "price":
+                matches = Product.get_category_sorted(category)
 
     return render_template('index.html',
                            avail_products=matches,
