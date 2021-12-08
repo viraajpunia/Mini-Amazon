@@ -137,6 +137,11 @@ def updateuserinfo(variable):
     if editemail == "True" and not(User.email_exists(newemail)):
         User.updateemail(current_user.id, newemail)
 
+    newpassword = request.form.get("editpassword")
+    editpassword = request.form.get("editpasswordbutton")
+    if editpassword == "True" and not(User.email_exists(newpassword)):
+        User.updatepassword(current_user.id, newpassword)
+
     newaddress = request.form.get("editaddress")
     editaddress = request.form.get("editaddressbutton")
     if editaddress == "True":
@@ -196,14 +201,12 @@ def index():
     if current_user.is_authenticated:
         purchases = Purchase.get_all_by_uid_since(
             current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
-        isSeller = User.is_seller(current_user.id)
     else:
         purchases = None
-        isSeller = False
     # render the page by adding information to the index.html file
     return render_template('index.html',
                            avail_products=products,
-                           purchase_history=purchases, isSeller = isSeller)
+                           purchase_history=purchases)
 
 
 @bp.route('/search', methods=['GET', 'POST'])
