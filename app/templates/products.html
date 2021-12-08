@@ -134,7 +134,7 @@
                 <td>
                   <div>
                     <p style = "display: inline-block; font-size: 18px; font-weight: bold; padding-top: 8px"> 
-                      <a href="{{ url_for('index.seller', variable=seller.seller_id) }}">Seller: {{seller.first_name}} {{seller.mid_name}}  {{seller.last_name}}</a>
+                      <a href="{{ url_for('index.sellerpublic', variable=seller.seller_id) }}">Seller: {{seller.first_name}} {{seller.mid_name}}  {{seller.last_name}}</a>
                     </p>
                     <form action= "/cart" style="display: inline-block; float: right">
                       <input type = "hidden" name = "uid" value = {{ current_user.id }}>

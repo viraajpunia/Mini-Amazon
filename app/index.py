@@ -84,6 +84,58 @@ def seller(variable):
                             leave_review = leave_review,
                             num_reviews=num_reviews)
 
+@bp.route('/sellerpublic/<variable>', methods=['GET', 'POST'])
+def sellerpublic(variable):
+    seller_id = variable
+
+    #Get associated seller reviews
+    reviews = SellerFeedback.get_by_uid(seller_id)
+    #print(reviews, file=sys.stderr)
+
+    #Get associated seller products
+    userinfo = User2.get(seller_id)
+    prods = Sellproduct.get_by_seller(seller_id) #prods returns all of the product_ids
+
+    seller_products = []
+
+    #Get average rating
+    avg = 0
+
+    for prod in prods:
+        product_id = prod.product_id
+        #print(product_id, file=sys.stderr)
+        product_obj = Product.get(product_id)
+        seller_products.append(product_obj)
+        #print(product_obj, file=sys.stderr)
+
+        ratings = [p.rating for p in ProductFeedback.get_item_reviews(product_id)]
+        if len(ratings) != 0:
+            avg += sum(ratings)/(len(ratings)*5)
+    
+    #Logic for submitting a new review for the Seller
+    #seller_ids = the sellers that the logged in user has bought from 
+    seller_ids = Purchase.get_sellers_by_uid(current_user.id)
+    leave_review = False
+    
+    if int(seller_id) in seller_ids:
+        print("User has bought from this seller", file=sys.stderr)
+        leave_review = True
+    
+    new_review = request.form.get("seller_review")
+    #SellerFeedback.post_review(seller_id,new_review)
+    
+    #Aggregate number of reviews for this seller
+    num_reviews = SellerFeedback.get_num_reviews(seller_id)
+    #print(num_reviews,file=sys.stderr)
+
+    return render_template('sellerpublic.html',
+                            user = userinfo,
+                            products = seller_products,
+                            reviews = reviews,
+                            avg = truncate(avg,2),
+                            leave_review = leave_review,
+                            num_reviews=num_reviews)
+
 @bp.route('/nonsellerpublicinfo/<variable>', methods=['GET', 'POST'])
 def nonsellerpublicinfo(variable):
     id = request.args.get('uid')
