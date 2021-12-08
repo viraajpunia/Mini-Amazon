@@ -236,7 +236,7 @@
         <button class="formbutton" type="submit">Search</button>
       </form>
       <div style = "display: inline-block; float: right;">
-        <a href="{{ url_for('index.cart', variable=6) }}" type="button" class="btn cart">Cart</a>
+        <a href="{{ url_for('index.cart', variable = current_user.id) }}" type="button" class="btn cart">Cart</a>
       </div>
 
       <div style = "display: inline-block; float: right;">
