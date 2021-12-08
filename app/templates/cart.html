@@ -3,24 +3,47 @@
 {% block content %}
 
 
-<h2 style= "position: relative; left: 50px">Cart:</h2>
+<h2 style= "position: relative; left: 300px; top: 80px">Cart:</h2>
 <br />
-<table class='table table-hover table-bordered container' style = "width: 80%">
+
+<div style = "position: relative; top: 15px; left: 1500px;">
+    <a class="btn btn-secondary" href="{{ url_for('index.order') }}" role="button">Checkout</a>
+</div>
+<br><br>
+<table class='table table-hover table-bordered container' style = "width: 70%">
   <tbody>
     {% for item in cartofuser %}
-      <tr style= "height: 150px">
+      <tr style= "height: 180px">
         <td>
-          <div class="column" style="width: 60%; display: inline-block;">
-            <div style="display: block">
-              <p style="font-size: 18px; font-weight: bold; text-align: left; float: left; width: 100%">
-                {{item.uid}} 
-                {{item.product_id}} 
-                {{item.seller_id}} 
-                {{item.quantity}} 
-              </p>
+            <div class="column" style="width: 20%; display: inline-flex; margin-right: 20px">
+                <img src={{item.img_link}} alt="Rose" style="object-position: 0 0; object-fit: cover; max-width: 100%; max-height: 130px; margin: auto;">
             </div>
-          </div>
-
+            <div class="column" style="width: 60%; display: inline-block;">
+                <div style="display: block">
+                  <p style="font-size: 18px; font-weight: bold; text-align: left; float: left; width: 100%">
+                    {{item.name}} 
+                  </p>
+                </div>
+                <div style="display: block">
+                  <p style="font-size: 16px; font-weight: normal; text-align: left; float: left;">
+                    {{item.descrip}}
+                  </p>
+                  <p>
+                    Quantity: {{item.quantity}}
+                  </p>
+                </div>
+              </div>
+        
+              <div class="column" style="width: 15%; display: inline-block;">
+                <div style="width: 80px; height: 80px; margin-bottom: 30px; background-color: #D6E5E3; display: inline-block; float: right">
+                  <p style="text-align: center; font-size: 13px; position: relative; top: 40%;"> 
+                    ${{item.price}} 
+                  </p>
+                  <p style="text-align: center; font-size: 13px; position: relative; top: 80%;"> 
+                    Category:{{item.category}} 
+                  </p>
+                </div>
+              </div> 
         </td>
       </tr>
     {% endfor %}
