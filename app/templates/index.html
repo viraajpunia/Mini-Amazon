@@ -4,6 +4,16 @@
 
 <br><br>
 
+<h2 style= "position: relative; left: 50px">
+  {% if current_user.is_authenticated %}
+    Hello {{current_user.first_name}}! 
+  {% endif %}
+</h2>
+
+<br />
+<br />
+
+
 <h2 style= "position: relative; left: 50px">Products for sale:</h2> 
 <br />
 <table class='table table-hover table-bordered container' style = "width: 80%">

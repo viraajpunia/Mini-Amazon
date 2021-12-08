@@ -125,7 +125,7 @@ returning *
     def edit_item(name, category, descrip, img_link, price):
         rows = app.db.execute('''
 UPDATE Products
-SET category = :category, descrip = :descrip, img_link = :img_link, price = :price)
+SET category = :category, descrip = :descrip, img_link = :img_link, price = :price
 WHERE name = :name
 returning *
 ''',
