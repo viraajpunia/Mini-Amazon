@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-
+<div style = "padding-left: 20px">
 <div class="row">
   <div>
     <center>
@@ -21,8 +21,8 @@
   <div class="column">
     
       <h1>Reviews</h1>
-      <h4>Number of Seller Ratings: {{ num_reviews }}</h4>
-      <h4>Average Seller Rating: {{ avg }} </h4>
+      <h5>Number of Seller Ratings: {{ num_reviews }}</h5>
+      <h5>Average Seller Rating: {{ avg }} </h5>
       <br />
         <tbody>
           {% for review in reviews %}
@@ -150,8 +150,10 @@
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
 </div>
+</div>
 <br />
 {% endif %}
+<!-- 
 <a class="btn btn-secondary" href="{{ url_for('index.my_reviews', variable = user.uid) }}"role="button">My Reviews</a>
-
+-->
 {% endblock %}

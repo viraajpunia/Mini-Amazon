@@ -4,7 +4,7 @@
 {% block content %}
 
 
-</div>
+<div style = "padding-left: 20px">
     <h1 style= "position: absolute; left: 250px">User Account Page
     <h3>
       <br />
@@ -143,10 +143,7 @@
     <br />
 </div>
 <a class="btn btn-secondary" href="{{ url_for('index.nonsellerpublicinfo', variable = user.id) }}" role="button">Public View</a>
-<<<<<<< HEAD
 <a class="btn btn-secondary" href="{{ url_for('index.seller', variable = user.id) }}" role="button">Seller Private View</a>
-=======
 <a class="btn btn-secondary" href="{{ url_for('index.my_reviews', variable = user.id) }}"role="button">My Reviews</a>
->>>>>>> e3f2c9119dcf007ce4322b701c2a7ae30e5e030a
 
 {% endblock %}
