@@ -6,11 +6,11 @@ from .. import login
 
 
 class Purchase:
-    def __init__(self, order_id, seller_id, product_id, current_timestamp, uid, num_items, fulfillment_status):
+    def __init__(self, order_id, seller_id, product_id, date, uid, num_items, fulfillment_status):
         self.order_id = order_id
         self.seller_id = seller_id
         self.product_id = product_id
-        self.current_timestamp = current_timestamp
+        self.date = date
         self.uid = uid
         self.num_items = num_items
         self.fulfillment_status = fulfillment_status
@@ -18,7 +18,7 @@ class Purchase:
     @staticmethod
     def get(uid):
         rows = app.db.execute('''
-SELECT order_id, seller_id, product_id, current_timestamp, uid, num_items, fulfillment_status
+SELECT order_id, seller_id, product_id, date, uid, num_items, fulfillment_status
 FROM Purchases
 WHERE uid = :uid
 ''',
@@ -28,7 +28,7 @@ WHERE uid = :uid
     @staticmethod
     def get_all_by_uid_since(uid, since):
         rows = app.db.execute('''
-SELECT  order_id, seller_id, product_id, current_timestamp, uid, num_items, fulfillment_status
+SELECT  order_id, seller_id, product_id, date, uid, num_items, fulfillment_status
 FROM Purchases
 WHERE uid = :uid
 AND current_timestamp >= :since
@@ -41,7 +41,7 @@ ORDER BY current_timestamp DESC
     @staticmethod
     def get_all_by_uid(uid):
         rows = app.db.execute('''
-SELECT  order_id, seller_id, product_id, current_timestamp, uid, num_items, fulfillment_status
+SELECT  order_id, seller_id, product_id, date, uid, num_items, fulfillment_status
 FROM Purchases
 WHERE uid = :uid
 ORDER BY current_timestamp DESC
