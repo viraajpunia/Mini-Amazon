@@ -109,19 +109,27 @@ def newuseracctpage(variable):
                             user = userinfo, purchase = purchase, acct  = account)
 
 
-@bp.route('/cart/<variable>', methods=['GET', 'POST'])
-def cart(variable):
-    carts = UserCart.get(variable)
+@bp.route('/cart', methods=['GET', 'POST'])
+def cart():
     #carts = Product.get_all(True)
-    uid = current_user.id
+    #uid = current_user.id
+    uid = request.args.get("uid")
     num = request.args.get("num")
     product_id = request.args.get("product_id")
     seller_id = request.args.get("seller_id")
-    #print(num, file=sys.stderr)
-    #print(product_id, file=sys.stderr)
-    #print(seller_id, file=sys.stderr)
+    print(num, file=sys.stderr)
+    print(product_id, file=sys.stderr)
+    print(seller_id, file=sys.stderr)
     #if product_id not in 
-    #addtocart.addtocart(uid, product_id, seller_id, num)
+    addtocart.addtocart(uid, product_id, seller_id, num)
+    carts = UserCart.get(uid)
+
+    return render_template('cart.html', cartofuser = carts)
+
+@bp.route('/cartdisplay', methods=['GET', 'POST'])
+def cartdisplay():
+    uid = current_user.id
+    carts = UserCart.get(uid)
     return render_template('cart.html', cartofuser = carts)
 
 
