@@ -234,6 +234,8 @@
         <input type="text" placeholder="Search..." name="item" />
 
         <button class="formbutton" type="submit">Search</button>
+        <input type="checkbox" id="sort" name="sort" value="price">
+        <label for="sort"> Sort by Price</label>
       </form>
       <div style = "display: inline-block; float: right;">
         <a href="{{ url_for('index.cartdisplay') }}" type="button" class="btn cart">Cart</a>
@@ -243,9 +245,7 @@
         {% if current_user.is_authenticated %}
           Hello {{current_user.first_name}}! 
           <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-light">Log out</a>
-          {% if current_user.is_seller%}
-          <a href="{{ url_for('index.seller', variable = current_user.id) }}" type="button" class="btn cart">View Account</a>
-          {% endif %}
+          <a href="{{ url_for('index.newuseracctpage', variable = current_user.id) }}" type="button" class="btn cart">View Account</a>
         {% else %}
           <a href="{{ url_for('users.login') }}" type="button" class="btn btn-light">Log in</a>
         {% endif %}

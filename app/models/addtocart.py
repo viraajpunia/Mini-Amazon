@@ -26,3 +26,59 @@ returning *
                             quantity = quantity
                             )
         return addtocart(*(rows[0])) if rows is not None else None
+
+    @staticmethod
+    def check(uid, product_id, seller_id):
+        rows = app.db.execute("""
+        SELECT * FROM UserCarts 
+        WHERE uid = :uid 
+        AND product_id = :product_id 
+        AND seller_id = :seller_id
+        """,
+                            uid = uid,
+                            product_id = product_id,
+                            seller_id = seller_id
+                            )
+        return [addtocart(*row) for row in rows]
+
+    @staticmethod
+    def update(uid, product_id, seller_id, quantity):
+        rows = app.db.execute('''
+        UPDATE UserCarts
+        SET quantity = :quantity
+        WHERE uid = :uid
+        AND product_id = :product_id 
+        AND seller_id = :seller_id
+        returning *
+        ''',
+                            uid = uid,
+                            product_id = product_id,
+                            seller_id = seller_id,
+                            quantity = quantity
+                            )
+        return None
+
+    @staticmethod
+    def delete_from_cart(uid, product_id, seller_id):
+        rows = app.db.execute('''
+        DELETE FROM UserCarts
+        WHERE uid = :uid
+        AND product_id = :product_id 
+        AND seller_id = :seller_id
+        returning *
+''',
+                            uid = uid,
+                            product_id = product_id,
+                            seller_id = seller_id
+                            )
+        return None
+
+    @staticmethod
+    def delete_cart(uid):
+        rows = app.db.execute('''
+        DELETE FROM UserCarts
+        WHERE uid = :uid
+        returning *
+        ''',
+        uid = uid)
+        return None

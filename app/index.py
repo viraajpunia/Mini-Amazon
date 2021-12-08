@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_login import current_user
 import datetime
 import sys
@@ -123,6 +123,61 @@ def newuseracctpage(variable):
     return render_template('newuseracctpage.html',
                             user = userinfo, purchase = purchase, acct  = account)
 
+@bp.route('/updateuserinfo/<variable>', methods=['GET', 'POST'])
+def updateuserinfo(variable):
+
+    
+    newfirstname = request.form.get("editfirstname")
+    editfirstname = request.form.get("editfirstnamebutton")
+    if editfirstname == "True":
+        User.updatefirstname(current_user.id, newfirstname)
+
+    newmiddlename = request.form.get("editmiddlename")
+    editmiddlename = request.form.get("editmiddlenamebutton")
+    if editmiddlename == "True":
+        User.updatemiddlename(current_user.id, newmiddlename)
+
+    newlastname = request.form.get("editlastname")
+    editlastname = request.form.get("editlastnamebutton")
+    if editlastname == "True":
+        User.updatelastname(current_user.id, newlastname)
+
+    newlastname = request.form.get("editlastname")
+    editlastname = request.form.get("editlastnamebutton")
+    if editlastname == "True":
+        User.updatelastname(current_user.id, newlastname)
+
+    newemail = request.form.get("editemail")
+    editemail = request.form.get("editemailbutton")
+    if editemail == "True" and not(User.email_exists(newemail)):
+        User.updateemail(current_user.id, newemail)
+
+    newpassword = request.form.get("editpassword")
+    editpassword = request.form.get("editpasswordbutton")
+    if editpassword == "True" and not(User.email_exists(newpassword)):
+        User.updatepassword(current_user.id, newpassword)
+
+    newaddress = request.form.get("editaddress")
+    editaddress = request.form.get("editaddressbutton")
+    if editaddress == "True":
+        User.updateaddress(current_user.id, newaddress)
+
+    newbalance = request.form.get("editbalance")
+    editbalance = request.form.get("editbalancebutton")
+    if editbalance == "True":
+        User.updatebalance(current_user.id, newbalance)
+
+    id = request.args.get('uid')
+    email = request.args.get('email')
+    password = request.args.get('password')
+
+    userinfo = User.get(variable)
+    purchase = Purchase.get_all_by_uid(variable)
+    account = UserAccount.get(variable)
+        
+    return render_template('newuseracctpage.html',
+                           user = userinfo, purchase = purchase, acct  = account)
+
 
 @bp.route('/cart', methods=['GET', 'POST'])
 def cart():
@@ -132,11 +187,19 @@ def cart():
     num = request.args.get("num")
     product_id = request.args.get("product_id")
     seller_id = request.args.get("seller_id")
+    delete = request.form.get("delete1")
+    #if delete == "True":
+        #addtocart.delete_from_cart(uid, product_id, seller_id, num)
     print(num, file=sys.stderr)
     print(product_id, file=sys.stderr)
     print(seller_id, file=sys.stderr)
     #if product_id not in 
-    addtocart.addtocart(uid, product_id, seller_id, num)
+    checked = addtocart.check(uid, product_id, seller_id)
+    if len(checked) == 0:
+        addtocart.addtocart(uid, product_id, seller_id, num)
+    else:
+        n = int(checked[0].quantity) + int(num)
+        addtocart.update(uid, product_id, seller_id, n)
     carts = UserCart.get(uid)
 
     return render_template('cart.html', cartofuser = carts)
@@ -144,14 +207,32 @@ def cart():
 @bp.route('/cartdisplay', methods=['GET', 'POST'])
 def cartdisplay():
     uid = current_user.id
+    
+    product_id = request.form.get("product_id")
+    seller_id = request.form.get("seller_id")
+    print(product_id,file=sys.stderr)
+
+
+    
+    delete = request.form.get("delete1")
+    if delete == "True":
+       addtocart.delete_from_cart(uid, product_id, seller_id)
     carts = UserCart.get(uid)
     return render_template('cart.html', cartofuser = carts)
 
 
 @bp.route('/order')
 def order():
-    item = Product.get(5)
-    return render_template('order.html', product = item)
+    items = UserCart.get(current_user.id)
+    price = [float(i.price)*float(i.quantity) for i in items]
+    total = sum(price)
+    return render_template('order.html', product = truncate(total,2))
+
+@bp.route('/submitted')
+def submitted():
+    uid = current_user.id
+    addtocart.delete_cart(uid)
+    return render_template('submitted.html')
 
 @bp.route('/')
 def index():
@@ -173,16 +254,25 @@ def index():
 def search():
     name = request.args.get("item")
     category = request.args.get("categories")
+    sort = request.args.get("sort")
     if name == "":
         if category == "All":
             matches = Product.get_all(True)
+            if sort == "price":
+                matches = Product.get_all_sorted(True)
         else:
             matches = Product.get_category(category)
+            if sort == "price":
+                matches = Product.get_category_sorted(category)
     else:
         if category == "All":
             matches = Product.get_item(name)
+            if sort == "price":
+                matches = Product.get_item_sorted(name)
         else:
             matches = Product.get_item_in_category(name, category)
+            if sort == "price":
+                matches = Product.get_category_sorted(category)
 
     return render_template('index.html',
                            avail_products=matches,
@@ -264,6 +354,136 @@ def my_reviews(variable):
 
 
 
+@bp.route('/additem', methods=['GET', 'POST'])
+def additem():
+    name = request.args.get("name")
+    category = request.args.get("category")
+    descrip = request.args.get("descrip")
+    img_link = request.args.get("img_link")
+    price = request.args.get("price")
+
+    total_items = Product.get_all()
+
+    Product.add_item(len(total_items), name, category, descrip, img_link, price)
+    Sellproduct.add_sell_item(current_user.id, len(total_items))
+
+    seller_id = current_user.id
+
+    #Get associated seller reviews
+    reviews = SellerFeedback.get_by_uid(seller_id)
+    #print(reviews, file=sys.stderr)
+
+    #Get associated seller products
+    userinfo = User2.get(seller_id)
+    prods = Sellproduct.get_by_seller(seller_id) #prods returns all of the product_ids
+
+    seller_products = []
+
+    #Get average rating
+    avg = 0
+
+    for prod in prods:
+        product_id = prod.product_id
+        #print(product_id, file=sys.stderr)
+        product_obj = Product.get(product_id)
+        seller_products.append(product_obj)
+        #print(product_obj, file=sys.stderr)
+
+        ratings = [p.rating for p in ProductFeedback.get_item_reviews(product_id)]
+        if len(ratings) != 0:
+            avg += sum(ratings)/(len(ratings)*5)
+
+    return render_template('seller.html',
+                            user = userinfo,
+                            products = seller_products,
+                            reviews = reviews,
+                            avg = truncate(avg,2))
+
+'''
+@bp.route('/edit', method=['GET', 'POST'])
+def edit():
+    name = request.args.get("name")
+    category = request.args.get("category")
+    descrip = request.args.get("descrip")
+    img_link = request.args.get("img_link")
+    price = request.args.get("price")
+
+    Product.edit_item(name, category, descrip, img_link, price)
+
+    seller_id = current_user.id
+
+    #Get associated seller reviews
+    reviews = SellerFeedback.get_by_uid(seller_id)
+    #print(reviews, file=sys.stderr)
+
+    #Get associated seller products
+    userinfo = User2.get(seller_id)
+    prods = Sellproduct.get_by_seller(seller_id) #prods returns all of the product_ids
+
+    seller_products = []
+
+    #Get average rating
+    avg = 0
+
+    for prod in prods:
+        product_id = prod.product_id
+        #print(product_id, file=sys.stderr)
+        product_obj = Product.get(product_id)
+        seller_products.append(product_obj)
+        #print(product_obj, file=sys.stderr)
+
+        ratings = [p.rating for p in ProductFeedback.get_item_reviews(product_id)]
+        if len(ratings) != 0:
+            avg += sum(ratings)/(len(ratings)*5)
+
+    return render_template('seller.html',
+                            user = userinfo,
+                            products = seller_products,
+                            reviews = reviews,
+                            avg = truncate(avg,2))
+'''
+'''
+@bp.route('/remove', methods=['GET', 'POST'])
+def remove():
+    name = request.args.get("name")
+
+    prod_by_name = Product.get_item(name)
+    #print(prod_by_name, file=sys.stderr)
+
+    #pid = prod_by_name[0].product_id
 
 
+    Sellproduct.delete_sell_item(current_user.id, pid)
 
+    seller_id = current_user.id
+
+    #Get associated seller reviews
+    reviews = SellerFeedback.get_by_uid(seller_id)
+    #print(reviews, file=sys.stderr)
+
+    #Get associated seller products
+    userinfo = User2.get(seller_id)
+    prods = Sellproduct.get_by_seller(seller_id) #prods returns all of the product_ids
+
+    seller_products = []
+
+    #Get average rating
+    avg = 0
+
+    for prod in prods:
+        product_id = prod.product_id
+        #print(product_id, file=sys.stderr)
+        product_obj = Product.get(product_id)
+        seller_products.append(product_obj)
+        #print(product_obj, file=sys.stderr)
+
+        ratings = [p.rating for p in ProductFeedback.get_item_reviews(product_id)]
+        if len(ratings) != 0:
+            avg += sum(ratings)/(len(ratings)*5)
+
+    return render_template('seller.html',
+                            user = userinfo,
+                            products = seller_products,
+                            reviews = reviews,
+                            avg = truncate(avg,2))
+'''

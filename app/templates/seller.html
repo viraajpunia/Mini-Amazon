@@ -78,6 +78,50 @@
       </tbody>
     </table>
 
+    <h3>Add Item to Sell</h3>
+    <br />
+    <div>
+      <form action= "/additem" style="display: inline-block">
+        <input type = "hidden" name = "seller_id" value = {{ current_user.id }}>
+        <input type="text" placeholder="name" name="name" />
+        <input type="text" placeholder="category" name="category" />
+        <input type="text" placeholder="description" name="descrip" />
+        <input type="text" placeholder="img_link" name="img_link" />
+        <input type="text" placeholder="price" name="price" />
+        <button class="formbutton" type="submit" style="background-color: #E0E4F5; color: black; padding-top: 10px; padding-bottom: 10px; padding-left: 30px; padding-right: 30px; font-size: 16px; border: none; margin-bottom: 12px;">Add Item to Sell</button>
+       </form>
+    </div>
+
+    <br />
+    <br />
+
+    <h3>Edit Product to Sell</h3>
+    <br />
+    <div>
+      <form action= "/edit" style="display: inline-block">
+        <input type = "hidden" name = "seller_id" value = {{ current_user.id }}>
+        <input type="text" placeholder="name" name="name" />
+        <input type="text" placeholder="category" name="category" />
+        <input type="text" placeholder="description" name="descrip" />
+        <input type="text" placeholder="img_link" name="img_link" />
+        <input type="text" placeholder="price" name="price" />
+        <button class="formbutton" type="submit" style="background-color: #E0E4F5; color: black; padding-top: 10px; padding-bottom: 10px; padding-left: 30px; padding-right: 30px; font-size: 16px; border: none; margin-bottom: 12px;">Edit Item to Sell</button>
+       </form>
+    </div>
+
+    <br />
+    <br />
+
+    <h3>Delete Product to Sell</h3>
+    <br />
+    <div>
+      <form action= "/remove" style="display: inline-block">
+        <input type = "hidden" name = "seller_id" value = {{ current_user.id }}>
+        <input type="text" placeholder="name" name="name" />
+        <button class="formbutton" type="submit" style="background-color: #E0E4F5; color: black; padding-top: 10px; padding-bottom: 10px; padding-left: 30px; padding-right: 30px; font-size: 16px; border: none; margin-bottom: 12px;">Delete Item to Sell</button>
+       </form>
+    </div>
+
   </div>
 </div>
 </div>
