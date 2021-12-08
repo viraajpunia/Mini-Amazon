@@ -21,13 +21,15 @@
   <div class="column">
     
       <h1>Reviews</h1>
+      <h4>Number of Seller Ratings: {{ num_reviews }}</h4>
       <h4>Average Seller Rating: {{ avg }} </h4>
       <br />
         <tbody>
           {% for review in reviews %}
           <td>
             <div style= "width: 90%; height: 60px; padding: 20px; margin: auto; border-style: solid; border-width: 1px; border-color: #D1D5DB; background-color: #E8EAED">
-              <p> {{ review.review }} </p>
+              <p> "{{ review.review }} "</p>
+             
             </div>
           </td>
           {% endfor %}
@@ -123,6 +125,33 @@
   </div>
 </div>
 </div>
-
+{% if leave_review == True %}
+<div>
+  <h1>Submit Review for this Seller</h1>
+  <br />
+  <form action="{{ url_for('index.seller', variable=user.uid) }}" method="POST">
+    <!-- Are we going to implement seller ratings? 
+    <div>
+      <p>Rating out of 5:</p>
+      <select id="stars" name="seller_stars" style="background-color: #E0E4F5;">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+    </div>
+    -->
+    <div class="form-group">
+      <label for="review">Write a Review</label>
+      <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="Rate this seller" name="seller_review">
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+<br />
+{% endif %}
+<a class="btn btn-secondary" href="{{ url_for('index.my_reviews', variable = user.uid) }}"role="button">My Reviews</a>
 
 {% endblock %}
