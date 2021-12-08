@@ -141,7 +141,7 @@ def generate_users(n_users, num_sellers, products, sells_products, orders, n_car
 		neworder['order_id'] = i
 		sp = random.choice(sell_product_set)
 		neworder['seller_id'] = sp[0]
-		neworder['product_id'] = sp[1]
+		neworder['product_id'] = sp[1]	
 
 		timestamp = fake.date_time_this_month()
 		neworder['current_timestamp'] = timestamp.strftime('%Y-%m-%d %r')
