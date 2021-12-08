@@ -64,7 +64,7 @@ VALUES(:first_name, :mid_name, :last_name, :email, :address, :password, 0)
 RETURNING uid
 """,
                                   email=email,
-                                  password=generate_password_hash(password),
+                                  password=password,
                                   first_name=first_name,
                                   mid_name=mid_name,
                                   last_name=last_name,
