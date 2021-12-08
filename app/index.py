@@ -117,9 +117,10 @@ def cart(variable):
     num = request.args.get("num")
     product_id = request.args.get("product_id")
     seller_id = request.args.get("seller_id")
-    print(num, file=sys.stderr)
-    print(product_id, file=sys.stderr)
-    print(seller_id, file=sys.stderr)
+    #print(num, file=sys.stderr)
+    #print(product_id, file=sys.stderr)
+    #print(seller_id, file=sys.stderr)
+    #if product_id not in 
     #addtocart.addtocart(uid, product_id, seller_id, num)
     return render_template('cart.html', cartofuser = carts)
 

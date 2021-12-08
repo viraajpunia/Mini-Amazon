@@ -39,26 +39,26 @@
     <input type="text" placeholder="Year" name="item" />
 </div>
 
-<div style= "position:absolute; top: 140px; left: 800px; width: 600px; height: 400px; padding: 20px; margin: auto; border-style: solid; border-width: 1px; border-color: #D1D5DB; background-color: #E8EAED"></div>
-<div style="position: absolute; top: 420px; left: 850px">
-    <p style="font-size: 16px; font-weight: normal; text-align: left; float: left;">
-      Subtotal: $7495.38
+<div style= "position:absolute; top: 200px; left: 800px; width: 600px; height: 300px; padding: 20px; margin: auto; border-style: solid; border-width: 1px; border-color: #D1D5DB; background-color: #E8EAED"></div>
+<div style="position: absolute; top: 315px; left: 850px">
+    <p style="font-size: 20px; font-weight: normal; text-align: left; float: left;">
+      Subtotal: 
     </p>
 </div>
-<div style="position: absolute; top: 445px; left: 850px">
-    <p style="font-size: 16px; font-weight: normal; text-align: left; float: left;">
+<div style="position: absolute; top: 365px; left: 850px">
+    <p style="font-size: 20px; font-weight: normal; text-align: left; float: left;">
       Shipping and Handling:
     </p>
 </div>
-<div style="position: absolute; top: 470px; left: 850px">
-    <p style="font-size: 24px; font-weight: normal; text-align: left; float: left;">
-      Total: $7495.38
+<div style="position: absolute; top: 410px; left: 850px">
+    <p style="font-size: 30px; font-weight: normal; text-align: left; float: left;">
+      Total: 
     </p>
 </div>
-<div style = "position: absolute; top: 380px; left: 850px;">
+<div style = "position: absolute; top: 247px; left: 1150px;">
     <input type="text" placeholder="Promo Code" name="item" />
 </div>
-<div style = "position: absolute; top: 320px; left: 850px;">
+<div style = "position: absolute; top: 240px; left: 850px;">
     <select id="categories" name="categories">
         <option value="Shipping Options">Shipping Options</option>
         <option value="Standard Shipping - $2.99">Standard Shipping - $2.99</option>
@@ -67,30 +67,7 @@
         <option value="One Day Shipping - $11.99">One Day Shipping - $11.99</option>
     </select>
 </div>
-<div class="column" style="position: absolute; top: 180px; left:850px; width: 9%; display: inline-flex; margin-right: 20px">
-    <img src="https://www.gardendesign.com/pictures/images/675x529Max/site_3/helianthus-yellow-flower-pixabay_11863.jpg" alt="Rose" style="object-position: 0 0; object-fit: cover; max-width: 100%; max-height: 130px; margin: auto;">
-  </div>
-  <div style="position: absolute; top: 180px; left: 1020px;">
-    <p style="font-size: 20px; font-weight: bold; text-align: left; float: left; width: 100%">
-      {{product.name}} 
-    </p>
-  </div>
-  <div style="position: absolute; top: 218px; left: 1020px;">
-    <p style="text-align: center; font-size: 16px; position: relative; top: 40%;"> 
-      ${{product.price}} 
-    </p>
-  </div>
-  <div style="position: absolute; top: 250px; left: 1020px;">
-    <p style="text-align: center; font-size: 16px; position: relative; top: 40%;"> 
-      Category: {{product.category}} 
-    </p>
-  </div>
-  <div style="position: absolute; top: 180px; left: 1250px;">
-    <p style="text-align: center; font-size: 16px; position: relative; top: 40%;"> 
-      Quantity: 6
-    </p>
-  </div>
-<div style = "position: absolute; top: 470px; left: 1250px;">
+<div style = "position: absolute; top: 420px; left: 1200px;">
     <a class="btn btn-secondary" href="{{ url_for('users.register') }}" role="button">Submit Order</a>
 </div>
 
