@@ -15,21 +15,40 @@ from .models.useracct import UserAccount
 from .models.productfeedback import ProductFeedback
 from .models.avgratings import AvgRating
 from .models.review import Review
+from .models.sellerfeedback import SellerFeedback
 
 
 from flask import Blueprint
 bp = Blueprint('index', __name__)
 
+def truncate(num,n):
+    temp = str(num)
+    for x in range(len(temp)):
+        if temp[x] == '.':
+            try:
+                return float(temp[:x+n+1])
+            except:
+                return float(temp)      
+    return float(temp)
+
 @bp.route('/seller/<variable>', methods=['GET', 'POST'])
 def seller(variable):
-    
-    #id = request.args.get('seller_id')
+    seller_id = variable
 
-    userinfo = User2.get(variable)
-    #prods = Sellproduct.get_by_seller(10)
-    prods = Sellproduct.get_by_seller(variable) #prods returns all of the product_ids
+    
+    
+    #Get associated seller reviews
+    reviews = SellerFeedback.get_by_uid(seller_id)
+    #print(reviews, file=sys.stderr)
+
+    #Get associated seller products
+    userinfo = User2.get(seller_id)
+    prods = Sellproduct.get_by_seller(seller_id) #prods returns all of the product_ids
 
     seller_products = []
+
+    #Get average rating
+    avg = 0
 
     for prod in prods:
         product_id = prod.product_id
@@ -38,9 +57,16 @@ def seller(variable):
         seller_products.append(product_obj)
         #print(product_obj, file=sys.stderr)
 
+        ratings = [p.rating for p in ProductFeedback.get_item_reviews(product_id)]
+        if len(ratings) != 0:
+            avg += sum(ratings)/(len(ratings)*5)
+        
+    print(avg, file=sys.stderr)
     return render_template('seller.html',
                             user = userinfo,
-                            products = seller_products)
+                            products = seller_products,
+                            reviews = reviews,
+                            avg = truncate(avg,2))
 
 @bp.route('/nonsellerpublicinfo/<variable>', methods=['GET', 'POST'])
 def nonsellerpublicinfo(variable):
