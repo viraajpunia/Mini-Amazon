@@ -157,26 +157,41 @@ def search():
 
 @bp.route('/more/<variable>', methods=['GET', 'POST'])
 def moreInfo(variable):
+    delete = request.form.get("delete")
+    #if True then delete the review
+    if delete == "True":
+        Review.delete_row(current_user.id)
+    
+
+    review = request.form.get("edit_review")
+    edit = request.form.get("edit")
+    if edit == "True":
+        Review.update_row(current_user.id,review)
+        
     item = Product.get(variable)
     reviews = ProductFeedback.get_item_reviews(variable)
     sells_item = Sellproduct.get_by_product(variable)
     rating = AvgRating.get_item_avg_rating(variable)
+
     
+
+
     return render_template('products.html',
                            product=item,
                            sells=sells_item,
                            reviews=reviews,
-                           rate=rating)
+                           rate=rating,
+                           current_user = current_user)
 
 @bp.route('/review/<variable>', methods=["POST","GET"])
 def review(variable):
-    buyer_id = 1 #hardcoded, change later
+    buyer_id = current_user.id
     product_id = variable
     rating = request.form.get("stars")
     review = request.form.get("review")
     date = datetime.datetime.now()
     
-    #Review.post_rating(buyer_id, product_id, rating, review, date)
+    Review.post_rating(buyer_id, product_id, rating, review, date)
     
     title = "Thank you for leaving a review :)"
 

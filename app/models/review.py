@@ -31,3 +31,29 @@ INSERT INTO Feedback
 VALUES (7,100,5,'Test rating','2021-11-14 08:19:19 AM')
 ''',)
         return None
+
+    @staticmethod
+    def delete_row(buyer_id):
+        rows = app.db.execute('''
+DELETE FROM Feedback
+WHERE buyer_id =:buyer_id
+returning *
+''',
+                              buyer_id=buyer_id)
+        return None
+
+    @staticmethod
+    def update_row(buyer_id,review):
+        rows = app.db.execute('''
+UPDATE Feedback
+SET review =:review
+WHERE buyer_id =:buyer_id
+returning *
+''',
+                              buyer_id=buyer_id,
+                              review=review)
+
+
+        return None
+
+
