@@ -130,7 +130,9 @@
                     <p style = "display: inline-block; font-size: 18px; font-weight: bold; padding-top: 8px"> 
                       <a href="{{ url_for('index.seller', variable=seller.seller_id) }}">Seller: {{seller.first_name}} {{seller.mid_name}}  {{seller.last_name}}</a>
                     </p>
-                    <form action= "/num" style="display: inline-block; float: right">
+                    <form action= "/cart/1" style="display: inline-block; float: right">
+                      <input type = "hidden" name = "seller_id" value = {{ seller.seller_id }}>
+                      <input type = "hidden" name = "product_id" value = {{ product.id }}>
                       <select id="num" name="num" style="background-color: #E0E4F5;">
                         <option value="1">1</option>
                         <option value="2">2</option>
