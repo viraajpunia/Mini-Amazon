@@ -333,6 +333,7 @@ def search():
 #variable = product_id
 @bp.route('/more/<variable>', methods=['GET', 'POST'])
 def moreInfo(variable):
+    product_id = variable
     delete = "False"
     delete = request.form.get("delete")
     #if True then delete the review
@@ -352,7 +353,7 @@ def moreInfo(variable):
 
     #Check if current user has already submitted a review:
     already_reviewed = False
-    buyer_ids = Review.list_ratings_buyer_ids(current_user.id)
+    buyer_ids = Review.list_ratings_buyer_ids(current_user.id,variable)
     if current_user.id in buyer_ids:
         print("Current user already reviewed this product",file=sys.stderr)
         already_reviewed = True
@@ -395,7 +396,7 @@ def my_reviews(variable):
     edit = request.form.get("edit")
     if edit == "True":
         new_stars = request.form.get("new_stars")
-        Review.update_row(current_user.id,review,new_stars)
+        Review.update_row_2(current_user.id,review,new_stars,product_id)
         
     buyer_id = variable
     reviews = Review.list_ratings(buyer_id)

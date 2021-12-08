@@ -15,18 +15,21 @@ class Review:
 SELECT *
 FROM Feedback
 WHERE buyer_id =:buyer_id
+ORDER BY date DESC
 ''',
                               buyer_id=buyer_id)
         return [Review(*row) for row in rows]
 
     @staticmethod
-    def list_ratings_buyer_ids(buyer_id):
+    def list_ratings_buyer_ids(buyer_id,product_id):
         rows = app.db.execute('''
 SELECT buyer_id
 FROM Feedback
 WHERE buyer_id =:buyer_id
+AND product_id =:product_id
 ''',
-                              buyer_id=buyer_id)
+                              buyer_id=buyer_id,
+                              product_id=product_id)
         return [int(row[0]) for row in rows]
         
 
@@ -77,6 +80,22 @@ returning *
                               buyer_id=buyer_id,
                               review=review,
                               new_stars=new_stars)
+
+        return None
+
+    @staticmethod
+    def update_row_2(buyer_id,review,new_stars,product_id):
+        rows = app.db.execute('''
+UPDATE Feedback
+SET review =:review, rating=:new_stars
+WHERE buyer_id =:buyer_id
+AND product_id =:product_id
+returning *
+''',
+                              buyer_id=buyer_id,
+                              review=review,
+                              new_stars=new_stars,
+                              product_id=product_id)
 
         return None
 
