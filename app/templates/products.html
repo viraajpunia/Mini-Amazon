@@ -61,28 +61,30 @@
                   <p style = "display: inline-block; font-size: 18px; font-weight: bold; padding-top: 8px; float: right; margin-right: 10px">
                     Rating: {{review.rating}}
                     <br />
-                    
-
-
-                    
                   </p>
                   <p>
                     {{review.review}}
                   </p>
                   {% if current_user.is_authenticated and current_user.id == review.buyer_id %}
-                    <form action="{{ url_for('index.moreInfo', variable=current_user.id) }}" method="POST" >
-                      
+                    <form action="{{ url_for('index.moreInfo', variable = product.id) }}" method="POST" >
+                      <select id="stars" name="new_stars" style="background-color: #E0E4F5;">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                      </select>
+                      <br />
+                      New Rating
                       <div class="form-group">
                         <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="Edit your review" name="edit_review">
                       </div>
                       <button class="btn btn-danger" type="submit" name="delete" value=True>
                         <span class="glyphicon glyphicon-trash">
-
                         </span> Delete
                       </button> 
                       <button class="btn btn-danger" type="submit" name="edit" value=True>
                         <span class="glyphicon glyphicon-trash">
-
                         </span> Submit Edited Review
                       </button> 
                     </form>
@@ -95,6 +97,9 @@
         </tbody>
       </table>
       <br />
+
+      <!--You can only submit a review if you haven't submitted one before-->
+      {% if not already_reviewed %}
       <h4>Submit Review:</h4>
       <br />
       <form action="{{ url_for('index.review', variable=product.id) }}" method="POST">
@@ -115,6 +120,7 @@
         
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
+      {% endif %}
     </div>
     
     <div style = "width: 50%; display: inline-block; float: right">
@@ -128,7 +134,7 @@
                 <td>
                   <div>
                     <p style = "display: inline-block; font-size: 18px; font-weight: bold; padding-top: 8px"> 
-                      <a href="{{ url_for('index.seller', variable=seller.seller_id) }}">Seller: {{seller.first_name}} {{seller.mid_name}}  {{seller.last_name}}</a>
+                      <a href="{{ url_for('index.sellerpublic', variable=seller.seller_id) }}">Seller: {{seller.first_name}} {{seller.mid_name}}  {{seller.last_name}}</a>
                     </p>
                     <form action= "/cart" style="display: inline-block; float: right">
                       <input type = "hidden" name = "uid" value = {{ current_user.id }}>
