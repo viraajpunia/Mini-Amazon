@@ -68,6 +68,19 @@
           </button> 
         </form>
       </p>
+      <p>Update Password:
+        <form action="{{ url_for('index.updateuserinfo', variable=current_user.id) }}" method="POST" >
+                      
+          <div class="form-group">
+            <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="Edit value" name="editpassword">
+          </div>
+          <button class="btn btn-danger" type="submit" name="editpasswordbutton" value=True>
+            <span class="glyphicon glyphicon-trash">
+        
+            </span> Submit Edit Value
+          </button> 
+        </form>
+      </p>
       <p>Address:
         {{user.address}}
         <form action="{{ url_for('index.updateuserinfo', variable=current_user.id) }}" method="POST" >
@@ -121,7 +134,7 @@
       {{item.fulfillment_status}}
       <br />
       Time Ordered:
-      {{item.current_timestamp}}#######
+      {{item.current_timestamp}}
       <br />
       ----------------
       <br />
@@ -130,8 +143,6 @@
     <br />
 </div>
 <a class="btn btn-secondary" href="{{ url_for('index.nonsellerpublicinfo', variable = user.id) }}" role="button">Public View</a>
-<a class="btn btn-secondary" role="button">Add Balance</a>
-<a class="btn btn-secondary" role="button">Withdraw Balance</a>
 
 
 {% endblock %}

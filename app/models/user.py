@@ -174,3 +174,17 @@ returning *
 
 
         return None
+
+    @staticmethod
+    def updatepassword(uid, password):
+        rows = app.db.execute('''
+UPDATE UserInfo
+SET password =:password
+WHERE uid =:uid
+returning *
+''',
+                              uid=uid,
+                              password=password)
+
+
+        return None
