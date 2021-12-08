@@ -43,6 +43,16 @@ WHERE email = :email
         return len(rows) > 0
 
     @staticmethod
+    def is_seller(uid):
+        rows = app.db.execute("""
+SELECT uid
+FROM Seller
+WHERE uid = :uid
+""",
+                              uid=uid)
+        return uid in rows
+
+    @staticmethod
     def register(first_name, mid_name, last_name, email, address, password):
         try:
             rows = app.db.execute("""

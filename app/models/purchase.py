@@ -37,3 +37,14 @@ ORDER BY current_timestamp DESC
                               uid=uid,
                               since=since)
         return [Purchase(*row) for row in rows]
+
+    @staticmethod
+    def get_all_by_uid(uid):
+        rows = app.db.execute('''
+SELECT  order_id, seller_id, product_id, current_timestamp, uid, num_items, fulfillment_status
+FROM Purchases
+WHERE uid = :uid
+ORDER BY current_timestamp DESC
+''',
+                              uid=uid)
+        return [Purchase(*row) for row in rows]

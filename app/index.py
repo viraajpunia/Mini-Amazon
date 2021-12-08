@@ -93,15 +93,15 @@ def useracctpage():
     return render_template('useracctpage.html',
                             user = userinfo, purchase = purchase, acct  = account)
 
-@bp.route('/newuseracctpage', methods=['GET', 'POST'])
-def newuseracctpage():
+@bp.route('/newuseracctpage/<variable>', methods=['GET', 'POST'])
+def newuseracctpage(variable):
     id = request.args.get('uid')
     email = request.args.get('email')
     password = request.args.get('password')
 
-    userinfo = User2.get(8)
-    purchase = Purchase.get(7)
-    account = UserAccount.get(8)
+    userinfo = User.get(variable)
+    purchase = Purchase.get_all_by_uid(variable)
+    account = UserAccount.get(variable)
     
     
     return render_template('newuseracctpage.html',
