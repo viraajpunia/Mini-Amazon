@@ -344,8 +344,7 @@ def search():
                 matches = Product.get_item_in_category_sorted(name, category)
 
     return render_template('index.html',
-                           avail_products=matches,
-                           purchase_history=None)
+                           avail_products=matches)
 
 #variable = product_id
 @bp.route('/more/<variable>', methods=['GET', 'POST'])
