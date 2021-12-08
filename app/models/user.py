@@ -23,13 +23,15 @@ class User(UserMixin):
 SELECT uid, first_name, mid_name, last_name, email, address, password, balance
 FROM UserInfo
 WHERE email = :email
+AND password = :password
 """,
-                              email=email)
+                              email=email,
+                              password=password)
         if not rows:  # email not found
             return None
-        elif not check_password_hash(rows[0][-1], password):
+        #elif not check_password_hash(rows[0][-1], password):
             # incorrect password
-            return None
+            #return None
         else:
             return User(*(rows[0]))
 
