@@ -36,8 +36,6 @@ def truncate(num,n):
 def seller(variable):
     seller_id = variable
 
-    
-    
     #Get associated seller reviews
     reviews = SellerFeedback.get_by_uid(seller_id)
     #print(reviews, file=sys.stderr)
@@ -61,13 +59,30 @@ def seller(variable):
         ratings = [p.rating for p in ProductFeedback.get_item_reviews(product_id)]
         if len(ratings) != 0:
             avg += sum(ratings)/(len(ratings)*5)
-        
-    print(avg, file=sys.stderr)
+    
+    #Logic for submitting a new review for the Seller
+    #seller_ids = the sellers that the logged in user has bought from 
+    seller_ids = Purchase.get_sellers_by_uid(current_user.id)
+    leave_review = False
+    
+    if int(seller_id) in seller_ids:
+        print("User has bought from this seller", file=sys.stderr)
+        leave_review = True
+    
+    new_review = request.form.get("seller_review")
+    #SellerFeedback.post_review(seller_id,new_review)
+    
+    #Aggregate number of reviews for this seller
+    num_reviews = SellerFeedback.get_num_reviews(seller_id)
+    #print(num_reviews,file=sys.stderr)
+
     return render_template('seller.html',
                             user = userinfo,
                             products = seller_products,
                             reviews = reviews,
-                            avg = truncate(avg,2))
+                            avg = truncate(avg,2),
+                            leave_review = leave_review,
+                            num_reviews=num_reviews)
 
 @bp.route('/nonsellerpublicinfo/<variable>', methods=['GET', 'POST'])
 def nonsellerpublicinfo(variable):
@@ -173,34 +188,40 @@ def search():
                            avail_products=matches,
                            purchase_history=None)
 
-
+#variable = product_id
 @bp.route('/more/<variable>', methods=['GET', 'POST'])
 def moreInfo(variable):
+    delete = "False"
     delete = request.form.get("delete")
     #if True then delete the review
     if delete == "True":
         Review.delete_row(current_user.id)
     
-
     review = request.form.get("edit_review")
     edit = request.form.get("edit")
     if edit == "True":
-        Review.update_row(current_user.id,review)
+        new_stars = request.form.get("new_stars")
+        Review.update_row(current_user.id,review,new_stars)
         
     item = Product.get(variable)
     reviews = ProductFeedback.get_item_reviews(variable)
     sells_item = Sellproduct.get_by_product(variable)
     rating = AvgRating.get_item_avg_rating(variable)
 
-    
-
+    #Check if current user has already submitted a review:
+    already_reviewed = False
+    buyer_ids = Review.list_ratings_buyer_ids(current_user.id)
+    if current_user.id in buyer_ids:
+        print("Current user already reviewed this product",file=sys.stderr)
+        already_reviewed = True
 
     return render_template('products.html',
                            product=item,
                            sells=sells_item,
                            reviews=reviews,
                            rate=rating,
-                           current_user = current_user)
+                           current_user = current_user,
+                           already_reviewed = already_reviewed)
 
 @bp.route('/review/<variable>', methods=["POST","GET"])
 def review(variable):
@@ -211,13 +232,35 @@ def review(variable):
     date = datetime.datetime.now()
     
     Review.post_rating(buyer_id, product_id, rating, review, date)
-    
+    print("Review Posted", file=sys.stderr)
     title = "Thank you for leaving a review :)"
 
     return render_template('review.html',
                             title=title, 
                             content = review,
-                            rating = rating)
+                            rating = rating,
+                            product_id=product_id)
+
+@bp.route('/my_reviews/<variable>', methods=["POST","GET"])
+def my_reviews(variable):
+    product_id = request.form.get("product_id")
+    delete = request.form.get("delete")
+    #if True then delete the review
+    if delete == "True":
+        Review.delete_row_product_id(product_id)
+    
+    review = request.form.get("edit_review")
+    edit = request.form.get("edit")
+    if edit == "True":
+        new_stars = request.form.get("new_stars")
+        Review.update_row(current_user.id,review,new_stars)
+        
+    buyer_id = variable
+    reviews = Review.list_ratings(buyer_id)
+    
+    #print(reviews, file=sys.stderr)
+
+    return render_template('my_reviews.html',reviews=reviews)
 
 
 
