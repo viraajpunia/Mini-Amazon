@@ -17,6 +17,7 @@ from .models.avgratings import AvgRating
 from .models.review import Review
 from .models.sellerfeedback import SellerFeedback
 from .models.addtocart import addtocart
+from .models.seller import Seller
 
 
 from flask import Blueprint
@@ -169,10 +170,15 @@ def newuseracctpage(variable):
     userinfo = User.get(variable)
     purchase = Purchase.get_all_by_uid(variable)
     account = UserAccount.get(variable)
-    
+
+    isSeller = Seller.get(variable)
+    sells = False
+
+    if len(isSeller) != 0:
+        sells = True
     
     return render_template('newuseracctpage.html',
-                            user = userinfo, purchase = purchase, acct  = account)
+                            user = userinfo, purchase = purchase, acct = account, seller = sells)
 
 @bp.route('/updateuserinfo/<variable>', methods=['GET', 'POST'])
 def updateuserinfo(variable):

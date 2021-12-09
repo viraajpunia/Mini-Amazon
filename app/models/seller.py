@@ -1,16 +1,25 @@
 from flask import current_app as app
 
-
 class Seller:
-    def __init__(self, id):
-        self.id = id
+    def __init__(self, uid):
+        self.uid = uid
 
-@staticmethod
+
+
+    @staticmethod
     def get(uid):
-        rows = app.db.execute('''
+        rows = app.db.execute("""
 SELECT uid
 FROM Seller
 WHERE uid = :uid
-''',
+""",
                               uid=uid)
-        return Seller(*(rows[0])) if rows is not None else None
+        return [Seller(*row) for row in rows]
+
+    @staticmethod
+    def get_all(uid):
+        rows = app.db.execute("""
+SELECT uid
+FROM Seller
+""")
+        return [Seller(*row) for row in rows]
