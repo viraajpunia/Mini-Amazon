@@ -51,8 +51,11 @@
       Total: ${{product}}
     </p>
 </div>
-<div style = "position: absolute; top: 252px; left: 1150px;">
-    <input type="text" placeholder="Promo Code" name="usercode" />
+<form action="{{url_for('index.order')}}" method="POST">
+<div class="form-group">
+  <div style = "position: absolute; top: 252px; left: 1150px;">
+    <input type="text" class="form-control" placeholder="Promo Code" name="usercode" />
+  </div>
 </div>
 <div style = "position: absolute; top: 245px; left: 845px;">
     <select id="categories" name="categories">
@@ -63,13 +66,15 @@
         <option value="One Day Shipping - $11.99">One Day Shipping - $11.99</option>
     </select>
 </div>
+
 <div style = "position: absolute; top: 300px; left: 1200px;">
-  <button class="btn btn-secondary" type="submit" name="promo" value=True>
+  <button class="btn btn-danger" type="submit" name="promo" value=True>
     <span class="glyphicon glyphicon-trash">
 
     </span> Update
   </button> 
 </div>
+</form>
 <div style = "position: absolute; top: 415px; left: 1200px;">
     <a class="btn btn-secondary" href="{{ url_for('index.submitted') }}" role="button">Submit Order</a>
 </div>

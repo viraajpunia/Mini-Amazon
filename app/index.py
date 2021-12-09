@@ -36,6 +36,15 @@ def truncate(num,n):
 @bp.route('/seller/<variable>', methods=['GET', 'POST'])
 def seller(variable):
     seller_id = variable
+
+    if request.form.get("delete_seller")=="True":
+        SellerFeedback.delete_record(current_user.id,seller_id)
+
+    if request.form.get("edit_seller")=="True":
+        new_review = request.form.get("edit_review_seller")
+        new_stars = request.form.get("new_stars_seller")
+        SellerFeedback.update_row(current_user.id,seller_id,new_review,new_stars)
+
     #Get associated seller reviews
     reviews = SellerFeedback.get_by_uid(seller_id)
     #print(reviews, file=sys.stderr)
@@ -47,21 +56,11 @@ def seller(variable):
     seller_products = []
 
     #Get average rating
-    avg = 0
-
-    for prod in prods:
-        product_id = prod.product_id
-        #print(product_id, file=sys.stderr)
-        product_obj = Product.get(product_id)
-        seller_products.append(product_obj)
-        #print(product_obj, file=sys.stderr)
-
-        ratings = [p.rating for p in ProductFeedback.get_item_reviews(product_id)]
-        if len(ratings) != 0:
-            avg += sum(ratings)/(len(ratings)*5)
+    avg = SellerFeedback.get_avg_rating(seller_id)
     
     #Logic for submitting a new review for the Seller
     #seller_ids = the sellers that the logged in user has bought from 
+    
     seller_ids = Purchase.get_sellers_by_uid(current_user.id)
     leave_review = False
     
@@ -69,18 +68,32 @@ def seller(variable):
         print("User has bought from this seller", file=sys.stderr)
         leave_review = True
     
+    seller_rating = request.form.get("seller_stars")
+
     new_review = request.form.get("seller_review")
-    #SellerFeedback.post_review(seller_id,new_review)
+    
+    if request.form.get("submit_seller") == "True":
+        print("Submitted seller review",file=sys.stderr)
+        SellerFeedback.post_review(current_user.id,seller_id,new_review,seller_rating)
     
     #Aggregate number of reviews for this seller
     num_reviews = SellerFeedback.get_num_reviews(seller_id)
     #print(num_reviews,file=sys.stderr)
+
+    #Get associated seller reviews
+    reviews = SellerFeedback.get_by_uid(seller_id)
+    buyer_ids = [int(rev.uid) for rev in reviews]
+    leave_review_seller = False
+    if current_user.id in buyer_ids:
+        leave_review_seller = True
+    
 
     return render_template('seller.html',
                             user = userinfo,
                             products = seller_products,
                             reviews = reviews,
                             avg = truncate(avg,2),
+                            leave_review_seller = leave_review_seller,
                             leave_review = leave_review,
                             num_reviews=num_reviews)
 
@@ -88,6 +101,14 @@ def seller(variable):
 def sellerpublic(variable):
     seller_id = variable
 
+    if request.form.get("delete_seller")=="True":
+        SellerFeedback.delete_record(current_user.id,seller_id)
+
+    if request.form.get("edit_seller")=="True":
+        new_review = request.form.get("edit_review_seller")
+        new_stars = request.form.get("new_stars_seller")
+        SellerFeedback.update_row(current_user.id,seller_id,new_review,new_stars)
+
     #Get associated seller reviews
     reviews = SellerFeedback.get_by_uid(seller_id)
     #print(reviews, file=sys.stderr)
@@ -99,21 +120,11 @@ def sellerpublic(variable):
     seller_products = []
 
     #Get average rating
-    avg = 0
-
-    for prod in prods:
-        product_id = prod.product_id
-        #print(product_id, file=sys.stderr)
-        product_obj = Product.get(product_id)
-        seller_products.append(product_obj)
-        #print(product_obj, file=sys.stderr)
-
-        ratings = [p.rating for p in ProductFeedback.get_item_reviews(product_id)]
-        if len(ratings) != 0:
-            avg += sum(ratings)/(len(ratings)*5)
+    avg = SellerFeedback.get_avg_rating(seller_id)
     
     #Logic for submitting a new review for the Seller
     #seller_ids = the sellers that the logged in user has bought from 
+    
     seller_ids = Purchase.get_sellers_by_uid(current_user.id)
     leave_review = False
     
@@ -121,18 +132,32 @@ def sellerpublic(variable):
         print("User has bought from this seller", file=sys.stderr)
         leave_review = True
     
+    seller_rating = request.form.get("seller_stars")
+
     new_review = request.form.get("seller_review")
-    #SellerFeedback.post_review(seller_id,new_review)
+    
+    if request.form.get("submit_seller") == "True":
+        print("Submitted seller review",file=sys.stderr)
+        SellerFeedback.post_review(current_user.id,seller_id,new_review,seller_rating)
     
     #Aggregate number of reviews for this seller
     num_reviews = SellerFeedback.get_num_reviews(seller_id)
     #print(num_reviews,file=sys.stderr)
+
+    #Get associated seller reviews
+    reviews = SellerFeedback.get_by_uid(seller_id)
+    buyer_ids = [int(rev.uid) for rev in reviews]
+    leave_review_seller = False
+    if current_user.id in buyer_ids:
+        leave_review_seller = True
+    
 
     return render_template('sellerpublic.html',
                             user = userinfo,
                             products = seller_products,
                             reviews = reviews,
                             avg = truncate(avg,2),
+                            leave_review_seller = leave_review_seller,
                             leave_review = leave_review,
                             num_reviews=num_reviews)
 
@@ -143,6 +168,7 @@ def nonsellerpublicinfo(variable):
     password = request.args.get('password')
 
     userinfo = User.get(variable)
+
     
     return render_template('nonsellerpublicinfo.html',
                             user = userinfo)
@@ -290,23 +316,36 @@ def cartdisplay():
     return render_template('cart.html', cartofuser = carts, product = truncate(total,2))
 
 
-@bp.route('/order')
+@bp.route('/order', methods=['GET', 'POST'])
 def order():
     items = UserCart.get(current_user.id)
     price = [float(i.price)*float(i.quantity) for i in items]
     balance = items[0].balance
     total = sum(price)
     promo = request.form.get("promo")
-    usercode = request.args.get("usercode")
-    if (promo=="True" and (usercode=="20-OFF" or usercode=="HOLIDAYS")):
+    usercode = request.form.get("usercode")
+    print(usercode,file=sys.stderr)
+    print(promo,file=sys.stderr)
+    if (promo=="True" and (usercode=="20-OFF" or usercode=="HOLIDAYS" or usercode=="SUMMERFUN")):
         total = total*0.80
     return render_template('order.html', product = truncate(total,2), balance = balance)
 
+
 @bp.route('/submitted')
 def submitted():
+    items = UserCart.get(current_user.id)
     uid = current_user.id
-    addtocart.delete_cart(uid)
-    return render_template('submitted.html')
+    price = [float(i.price)*float(i.quantity) for i in items]
+    total = sum(price)
+    balance = items[0].balance
+    carts = UserCart.get(uid)
+    if (balance>=total):
+        newbalance = balance-total
+        UserCart.update(uid, truncate(newbalance,3))
+        addtocart.delete_cart(uid)
+        return render_template('submitted.html', cartofuser = carts, items=items, total = truncate(total,2), newbalance=newbalance)
+    else:
+        return render_template('insufficient.html')
 
 @bp.route('/')
 def index():
