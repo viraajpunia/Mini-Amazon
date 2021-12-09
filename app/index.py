@@ -17,6 +17,7 @@ from .models.avgratings import AvgRating
 from .models.review import Review
 from .models.sellerfeedback import SellerFeedback
 from .models.addtocart import addtocart
+from .models.seller import Seller
 
 
 from flask import Blueprint
@@ -44,7 +45,9 @@ def seller(variable):
         new_stars = request.form.get("new_stars_seller")
         SellerFeedback.update_row(current_user.id,seller_id,new_review,new_stars)
 
-
+    #Get associated seller reviews
+    reviews = SellerFeedback.get_by_uid(seller_id)
+    #print(reviews, file=sys.stderr)
 
     #Get associated seller products
     userinfo = User2.get(seller_id)
@@ -94,6 +97,58 @@ def seller(variable):
                             leave_review = leave_review,
                             num_reviews=num_reviews)
 
+@bp.route('/sellerpublic/<variable>', methods=['GET', 'POST'])
+def sellerpublic(variable):
+    seller_id = variable
+
+    #Get associated seller reviews
+    reviews = SellerFeedback.get_by_uid(seller_id)
+    #print(reviews, file=sys.stderr)
+
+    #Get associated seller products
+    userinfo = User2.get(seller_id)
+    prods = Sellproduct.get_by_seller(seller_id) #prods returns all of the product_ids
+
+    seller_products = []
+
+    #Get average rating
+    avg = 0
+
+    for prod in prods:
+        product_id = prod.product_id
+        #print(product_id, file=sys.stderr)
+        product_obj = Product.get(product_id)
+        seller_products.append(product_obj)
+        #print(product_obj, file=sys.stderr)
+
+        ratings = [p.rating for p in ProductFeedback.get_item_reviews(product_id)]
+        if len(ratings) != 0:
+            avg += sum(ratings)/(len(ratings)*5)
+    
+    #Logic for submitting a new review for the Seller
+    #seller_ids = the sellers that the logged in user has bought from 
+    seller_ids = Purchase.get_sellers_by_uid(current_user.id)
+    leave_review = False
+    
+    if int(seller_id) in seller_ids:
+        print("User has bought from this seller", file=sys.stderr)
+        leave_review = True
+    
+    new_review = request.form.get("seller_review")
+    #SellerFeedback.post_review(seller_id,new_review)
+    
+    #Aggregate number of reviews for this seller
+    num_reviews = SellerFeedback.get_num_reviews(seller_id)
+    #print(num_reviews,file=sys.stderr)
+
+    return render_template('sellerpublic.html',
+                            user = userinfo,
+                            products = seller_products,
+                            reviews = reviews,
+                            avg = truncate(avg,2),
+                            leave_review = leave_review,
+                            num_reviews=num_reviews)
+
 @bp.route('/nonsellerpublicinfo/<variable>', methods=['GET', 'POST'])
 def nonsellerpublicinfo(variable):
     id = request.args.get('uid')
@@ -129,10 +184,15 @@ def newuseracctpage(variable):
     userinfo = User.get(variable)
     purchase = Purchase.get_all_by_uid(variable)
     account = UserAccount.get(variable)
-    
+
+    isSeller = Seller.get(variable)
+    sells = False
+
+    if len(isSeller) != 0:
+        sells = True
     
     return render_template('newuseracctpage.html',
-                            user = userinfo, purchase = purchase, acct  = account)
+                            user = userinfo, purchase = purchase, acct = account, seller = sells)
 
 @bp.route('/updateuserinfo/<variable>', methods=['GET', 'POST'])
 def updateuserinfo(variable):
@@ -212,8 +272,9 @@ def cart():
         n = int(checked[0].quantity) + int(num)
         addtocart.update(uid, product_id, seller_id, n)
     carts = UserCart.get(uid)
-
-    return render_template('cart.html', cartofuser = carts)
+    price = [float(i.price)*float(i.quantity) for i in carts]
+    total = sum(price)
+    return render_template('cart.html', cartofuser = carts, product = truncate(total,2))
 
 @bp.route('/cartdisplay', methods=['GET', 'POST'])
 def cartdisplay():
@@ -221,23 +282,39 @@ def cartdisplay():
     
     product_id = request.form.get("product_id")
     seller_id = request.form.get("seller_id")
+    num = request.form.get("num")
     print(product_id,file=sys.stderr)
 
-
-    
+    plus = request.form.get("plus")
+    if plus == "True":
+        n = int(num)+1
+        addtocart.update(uid, product_id, seller_id, str(n))
+    minus = request.form.get("minus")
+    if minus == "True":
+        n = int(num)-1
+        addtocart.update(uid, product_id, seller_id, str(n))
+        if n==0:
+            addtocart.delete_from_cart(uid, product_id, seller_id)
     delete = request.form.get("delete1")
     if delete == "True":
        addtocart.delete_from_cart(uid, product_id, seller_id)
     carts = UserCart.get(uid)
-    return render_template('cart.html', cartofuser = carts)
+    price = [float(i.price)*float(i.quantity) for i in carts]
+    total = sum(price)
+    return render_template('cart.html', cartofuser = carts, product = truncate(total,2))
 
 
 @bp.route('/order')
 def order():
     items = UserCart.get(current_user.id)
     price = [float(i.price)*float(i.quantity) for i in items]
+    balance = items[0].balance
     total = sum(price)
-    return render_template('order.html', product = truncate(total,2))
+    promo = request.form.get("promo")
+    usercode = request.args.get("usercode")
+    if (promo=="True" and (usercode=="20-OFF" or usercode=="HOLIDAYS")):
+        total = total*0.80
+    return render_template('order.html', product = truncate(total,2), balance = balance)
 
 @bp.route('/submitted')
 def submitted():
@@ -278,16 +355,16 @@ def search():
     else:
         if category == "All":
             matches = Product.get_item(name)
+            #matches = Product.get_item_keyword(name)
             if sort == "price":
                 matches = Product.get_item_sorted(name)
         else:
             matches = Product.get_item_in_category(name, category)
             if sort == "price":
-                matches = Product.get_category_sorted(category)
+                matches = Product.get_item_in_category_sorted(name, category)
 
     return render_template('index.html',
-                           avail_products=matches,
-                           purchase_history=None)
+                           avail_products=matches)
 
 #variable = product_id
 @bp.route('/more/<variable>', methods=['GET', 'POST'])

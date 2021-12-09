@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style = "padding-left: 20px">
+<div class="row">
+  <div>
+    <center>
+      <br />
+      <br />
+      <h1>Seller: {{ user.first_name }} {{ user.mid_name }} {{ user.last_name}}</h1>
+
+        <p>
+          {{user.email}}
+        </p>
+        <p>
+          {{user.address}}
+        </p>
+
+    </center>
+
+  <br />
+  
+  <div class="column">
+    
+      <h1>Reviews</h1>
+      <h5>Number of Seller Ratings: {{ num_reviews }}</h5>
+      <h5>Average Seller Rating: {{ avg }} </h5>
+      <br />
+        <tbody>
+          {% for review in reviews %}
+          <td>
+            <div style= "width: 90%; height: 60px; padding: 20px; margin: auto; border-style: solid; border-width: 1px; border-color: #D1D5DB; background-color: #E8EAED">
+              <p> "{{ review.review }} "</p>
+             
+            </div>
+          </td>
+          {% endfor %}
+        </tbody>
+      <br />
+      <br />
+      
+      <h1>Products Currently Selling</h1>
+      <br />
+
+    <table class='table table-hover table-bordered container' style = "width: 80%">
+      <tbody>
+        {% for product in products%}
+          <tr style= "height: 150px">
+            <td>
+              <div class="column" style="width: 20%; display: inline-flex; margin-right: 20px">
+                <img src={{product.img_link}} alt="random image" style="object-position: center center; object-fit: cover; max-width: 100%; min-width: 80px; min-height: 100px; max-height: 130px; margin: auto;">
+              </div>
+    
+              <div class="column" style="width: 60%; display: inline-block;">
+                <div style="display: block">
+                  <p style="font-size: 18px; font-weight: bold; text-align: left; float: left; width: 100%">
+                    {{product.name}} 
+                  </p>
+                </div>
+                <div style="display: block">
+                  <p style="font-size: 16px; font-weight: normal; text-align: left; float: left;">
+                    {{product.descrip}}
+                  </p>
+                </div>
+              </div>
+    
+              <div class="column" style="width: 15%; display: inline-block;">
+                <div style="width: 80px; height: 80px; margin-bottom: 60px; background-color: #D6E5E3; display: inline-block; float: right">
+                  <p style="text-align: center; font-size: 13px; position: relative; top: 40%;"> 
+                    ${{product.price}} 
+                  </p>
+                  <p style="text-align: center; font-size: 13px; position: relative; top: 80%;"> 
+                    Category: {{product.category}} 
+                  </p>
+                  <p style = "text-align: center; font-size: 15px; position: relative; top: 70%;">
+                    <a href="{{ url_for('index.moreInfo', variable=product.id) }}">More Info</a>
+                  </p>
+                </div>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+
+  </div>
+</div>
+</div>
+{% if leave_review == True %}
+<div>
+  <h1>Submit Review for this Seller</h1>
+  <br />
+  <form action="{{ url_for('index.seller', variable=user.uid) }}" method="POST">
+    <!-- Are we going to implement seller ratings? 
+    <div>
+      <p>Rating out of 5:</p>
+      <select id="stars" name="seller_stars" style="background-color: #E0E4F5;">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+    </div>
+    -->
+    <div class="form-group">
+      <label for="review">Write a Review</label>
+      <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="Rate this seller" name="seller_review">
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+</div>
+<br />
+{% endif %}
+<!-- 
+<a class="btn btn-secondary" href="{{ url_for('index.my_reviews', variable = user.uid) }}"role="button">My Reviews</a>
+-->
+{% endblock %}

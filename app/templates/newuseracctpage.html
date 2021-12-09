@@ -3,6 +3,8 @@
 
 {% block content %}
 
+<br />
+<br />
 
 <div style = "padding-left: 20px">
     <h1 style= "position: absolute; left: 250px">User Account Page
@@ -134,7 +136,7 @@
       {{item.fulfillment_status}}
       <br />
       Time Ordered:
-      {{item.current_timestamp}}
+      {{item.date}}
       <br />
       ----------------
       <br />
@@ -143,7 +145,10 @@
     <br />
 </div>
 <a class="btn btn-secondary" href="{{ url_for('index.nonsellerpublicinfo', variable = user.id) }}" role="button">Public View</a>
-<a class="btn btn-secondary" href="{{ url_for('index.seller', variable = user.id) }}" role="button">Seller Private View</a>
+{% if seller == True %}
+  <a class="btn btn-secondary" href="{{ url_for('index.seller', variable = user.id) }}" role="button">Seller Private View</a>
+{% endif %}
 <a class="btn btn-secondary" href="{{ url_for('index.my_reviews', variable = user.id) }}"role="button">My Reviews</a>
-
+<br />
+<br />
 {% endblock %}
