@@ -196,13 +196,15 @@ def generate_users(n_users, num_sellers, products, sells_products, orders, n_car
 
 	write_file(feedback_data, "Feedback.csv")
 
+	uid_array = [uid for uid in range(1,n_users)]
 
 	sellerReviews_data = []
-	for i in range(1, n_seller_reviews + 1):
+	for i in range(1, n_users + 1):
 		newsreview = {}
-		newsreview['uid'] = random.choice(seller_list)
-		newsreview['review_id'] = i
+		newsreview['uid'] = i
+		newsreview['seller_id'] = random.choice(seller_list)
 		newsreview['review'] = fake.sentence()
+		newsreview['rating'] = random.choice([1,2,3,4,5])
 
 		sellerReviews_data.append(newsreview)
 
