@@ -30,6 +30,19 @@ AND UserCarts.product_id = Products.product_id
                               uid=uid)
         return [UserCart(*row) for row in rows]
 
+    @staticmethod
+    def update(uid, balance):
+        rows = app.db.execute('''
+        UPDATE UserInfo
+        SET balance = :balance
+        WHERE uid = :uid
+        returning *
+        ''',
+                            uid = uid,
+                            balance = balance
+                            )
+        return None
+
 
 
 

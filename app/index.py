@@ -304,23 +304,36 @@ def cartdisplay():
     return render_template('cart.html', cartofuser = carts, product = truncate(total,2))
 
 
-@bp.route('/order')
+@bp.route('/order', methods=['GET', 'POST'])
 def order():
     items = UserCart.get(current_user.id)
     price = [float(i.price)*float(i.quantity) for i in items]
     balance = items[0].balance
     total = sum(price)
     promo = request.form.get("promo")
-    usercode = request.args.get("usercode")
-    if (promo=="True" and (usercode=="20-OFF" or usercode=="HOLIDAYS")):
+    usercode = request.form.get("usercode")
+    print(usercode,file=sys.stderr)
+    print(promo,file=sys.stderr)
+    if (promo=="True" and (usercode=="20-OFF" or usercode=="HOLIDAYS" or usercode=="SUMMERFUN")):
         total = total*0.80
     return render_template('order.html', product = truncate(total,2), balance = balance)
 
+
 @bp.route('/submitted')
 def submitted():
+    items = UserCart.get(current_user.id)
     uid = current_user.id
-    addtocart.delete_cart(uid)
-    return render_template('submitted.html')
+    price = [float(i.price)*float(i.quantity) for i in items]
+    total = sum(price)
+    balance = items[0].balance
+    carts = UserCart.get(uid)
+    if (balance>=total):
+        newbalance = balance-total
+        UserCart.update(uid, truncate(newbalance,3))
+        addtocart.delete_cart(uid)
+        return render_template('submitted.html', cartofuser = carts, items=items, total = truncate(total,2), newbalance=newbalance)
+    else:
+        return render_template('insufficient.html')
 
 @bp.route('/')
 def index():
