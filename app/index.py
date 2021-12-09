@@ -515,10 +515,14 @@ def additem():
     img_link = request.args.get("img_link")
     price = request.args.get("price")
 
-    total_items = Product.get_all()
+    if len(Product.get_exact_item_name(name)) > 0:
+        Sellproduct.add_sell_item(current_user.id, Product.get_exact_item_id(name)[0])
 
-    Product.add_item(len(total_items) + 1, name, category, descrip, img_link, price)
-    Sellproduct.add_sell_item(current_user.id, len(total_items) + 1)
+    else:
+        total_items = Product.get_all()
+
+        Product.add_item(len(total_items) + 1, name, category, descrip, img_link, price)
+        Sellproduct.add_sell_item(current_user.id, len(total_items) + 1)
 
     seller_id = current_user.id
 

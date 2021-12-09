@@ -41,6 +41,26 @@ ORDER BY price DESC
         return [Product(*row) for row in rows]
 
     @staticmethod
+    def get_exact_item_name(name):
+        rows = app.db.execute('''
+SELECT product_id, category, name, descrip, img_link, price, available
+FROM Products
+WHERE name = :name
+''',
+                              name=name)
+        return [Product(*row).name for row in rows]
+
+    @staticmethod
+    def get_exact_item_id(name):
+        rows = app.db.execute('''
+SELECT product_id, category, name, descrip, img_link, price, available
+FROM Products
+WHERE name = :name
+''',
+                              name=name)
+        return [Product(*row).id for row in rows]
+
+    @staticmethod
     def get_item(name):
         rows = app.db.execute('''
 SELECT product_id, category, name, descrip, img_link, price, available
