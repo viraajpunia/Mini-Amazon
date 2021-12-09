@@ -24,17 +24,76 @@
       <h5>Number of Seller Ratings: {{ num_reviews }}</h5>
       <h5>Average Seller Rating: {{ avg }} </h5>
       <br />
+      <!--"user.uid refers to the seller's id"-->
+      {% if (not leave_review_seller) and leave_review%}
+        <h1>Submit Review for this Seller</h1>
+        <form action="{{ url_for('index.seller', variable=user.uid) }}" method="POST">
+            
+          <div>
+            <p>Rating out of 5:</p>
+            <select id="stars" name="seller_stars" style="background-color: #E0E4F5;">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="review">Write a Review</label>
+            <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="Rate this seller" name="seller_review">
+          </div>
+          <button type="submit" class="btn btn-primary" name="submit_seller" value=True>Submit</button>
+      {% endif %}
+        <br />
+
+</form>
+      <table class='table table-hover table-bordered container'>
         <tbody>
-          {% for review in reviews %}
-          <td>
-            <div style= "width: 90%; height: 60px; padding: 20px; margin: auto; border-style: solid; border-width: 1px; border-color: #D1D5DB; background-color: #E8EAED">
-              <p> "{{ review.review }} "</p>
-             
-            </div>
-          </td>
+          {% for review in reviews%}
+            <tr style= "height: 100px">
+              <td>
+                <div>
+                  <p style = "display: inline-block; font-size: 18px; font-weight: bold; padding-top: 8px; float: right; margin-right: 10px">
+                    Rating: {{review.rating}}
+                    <br />
+                  </p>
+                  <p>
+                    {{review.review}}
+                  </p>
+                  {% if current_user.is_authenticated and current_user.id == review.uid %}
+                  <form action="{{ url_for('index.seller', variable=user.uid) }}" method="POST">
+                            <select id="stars" name="new_stars_seller" style="background-color: #E0E4F5;">
+                              <option value="1">1</option>
+                              <option value="2">2</option>
+                              <option value="3">3</option>
+                              <option value="4">4</option>
+                              <option value="5">5</option>
+                            </select>
+                            <br />
+                            New Rating
+                            <div class="form-group">
+                              <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="Edit your review" name="edit_review_seller">
+                            </div>
+                            <button class="btn btn-danger" type="submit" name="delete_seller" value=True>
+                              <span class="glyphicon glyphicon-trash">
+                              </span> Delete
+                            </button> 
+                            <button class="btn btn-danger" type="submit" name="edit_seller" value=True>
+                              <span class="glyphicon glyphicon-trash">
+                              </span> Submit Edited Review
+                            </button> 
+                          </form>
+                          {% endif %}
+                </div>
+              </td>
+            </tr>
+          
           {% endfor %}
         </tbody>
-      
+      </table>
+
       <h1>Products</h1>
 
     <table class='table table-hover table-bordered container' style = "width: 80%">
@@ -125,35 +184,6 @@
   </div>
 </div>
 </div>
-{% if leave_review == True %}
-<div>
-  <h1>Submit Review for this Seller</h1>
-  <br />
-  <form action="{{ url_for('index.seller', variable=user.uid) }}" method="POST">
-    <!-- Are we going to implement seller ratings? 
-    <div>
-      <p>Rating out of 5:</p>
-      <select id="stars" name="seller_stars" style="background-color: #E0E4F5;">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-      </select>
-    </div>
-    -->
-    <div class="form-group">
-      <label for="review">Write a Review</label>
-      <input type="text" class="form-control" aria-describedby="emailHelp" placeholder="Rate this seller" name="seller_review">
-    </div>
-    
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </form>
-</div>
-</div>
-<br />
-{% endif %}
-<!-- 
-<a class="btn btn-secondary" href="{{ url_for('index.my_reviews', variable = user.uid) }}"role="button">My Reviews</a>
--->
+
+
 {% endblock %}
