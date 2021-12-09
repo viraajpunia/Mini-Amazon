@@ -378,6 +378,12 @@ def submitted():
     if (balance>=total):
         newbalance = balance-total
         UserCart.update(uid, truncate(newbalance,3))
+        for i in items:
+            seller_id = i.seller_id
+            selleritems = UserCart.get(seller_id)
+            sellerbalance = selleritems[0].balance
+            newsellerbalance = sellerbalance+total
+            UserCart.update(seller_id, truncate(newsellerbalance,3))
         addtocart.delete_cart(uid)
         return render_template('submitted.html', cartofuser = carts, items=items, total = truncate(total,2), newbalance=newbalance)
     else:
