@@ -86,6 +86,24 @@ def seller(variable):
     leave_review_seller = False
     if current_user.id in buyer_ids:
         leave_review_seller = True
+
+    prods = Sellproduct.get_by_seller(seller_id) #prods returns all of the product_ids
+
+    seller_products = []
+
+    #Get average rating
+    avg = 0
+
+    for prod in prods:
+        product_id = prod.product_id
+        #print(product_id, file=sys.stderr)
+        product_obj = Product.get(product_id)
+        seller_products.append(product_obj)
+        #print(product_obj, file=sys.stderr)
+
+        ratings = [p.rating for p in ProductFeedback.get_item_reviews(product_id)]
+        if len(ratings) != 0:
+            avg += sum(ratings)/(len(ratings)*5)
     
 
     return render_template('seller.html',
@@ -150,6 +168,24 @@ def sellerpublic(variable):
     leave_review_seller = False
     if current_user.id in buyer_ids:
         leave_review_seller = True
+
+    prods = Sellproduct.get_by_seller(seller_id) #prods returns all of the product_ids
+
+    seller_products = []
+
+    #Get average rating
+    avg = 0
+
+    for prod in prods:
+        product_id = prod.product_id
+        #print(product_id, file=sys.stderr)
+        product_obj = Product.get(product_id)
+        seller_products.append(product_obj)
+        #print(product_obj, file=sys.stderr)
+
+        ratings = [p.rating for p in ProductFeedback.get_item_reviews(product_id)]
+        if len(ratings) != 0:
+            avg += sum(ratings)/(len(ratings)*5)
     
 
     return render_template('sellerpublic.html',
@@ -471,21 +507,24 @@ def my_reviews(variable):
 @bp.route('/additem', methods=['GET', 'POST'])
 def additem():
     name = request.args.get("name")
-    category = request.args.get("category")
+    category = request.args.get("categories")
     descrip = request.args.get("descrip")
     img_link = request.args.get("img_link")
     price = request.args.get("price")
 
     total_items = Product.get_all()
 
-    Product.add_item(len(total_items), name, category, descrip, img_link, price)
-    Sellproduct.add_sell_item(current_user.id, len(total_items))
+    Product.add_item(len(total_items) + 1, name, category, descrip, img_link, price)
+    Sellproduct.add_sell_item(current_user.id, len(total_items) + 1)
 
     seller_id = current_user.id
 
     #Get associated seller reviews
     reviews = SellerFeedback.get_by_uid(seller_id)
     #print(reviews, file=sys.stderr)
+
+    #Aggregate number of reviews for this seller
+    num_reviews = SellerFeedback.get_num_reviews(seller_id)
 
     #Get associated seller products
     userinfo = User2.get(seller_id)
@@ -511,7 +550,8 @@ def additem():
                             user = userinfo,
                             products = seller_products,
                             reviews = reviews,
-                            avg = truncate(avg,2))
+                            avg = truncate(avg,2),
+                            num_reviews=num_reviews)
 
 @bp.route('/remove', methods=['GET', 'POST'])
 def remove():
@@ -531,6 +571,9 @@ def remove():
     reviews = SellerFeedback.get_by_uid(seller_id)
     #print(reviews, file=sys.stderr)
 
+    #Aggregate number of reviews for this seller
+    num_reviews = SellerFeedback.get_num_reviews(seller_id)
+
     #Get associated seller products
     userinfo = User2.get(seller_id)
     prods = Sellproduct.get_by_seller(seller_id) #prods returns all of the product_ids
@@ -555,12 +598,13 @@ def remove():
                             user = userinfo,
                             products = seller_products,
                             reviews = reviews,
-                            avg = truncate(avg,2))
+                            avg = truncate(avg,2),
+                            num_reviews=num_reviews)
 
 @bp.route('/edit', methods=['GET', 'POST'])
 def edit():
     name = request.args.get("name")
-    category = request.args.get("category")
+    category = request.args.get("categories")
     descrip = request.args.get("descrip")
     img_link = request.args.get("img_link")
     price = request.args.get("price")
@@ -573,6 +617,9 @@ def edit():
     reviews = SellerFeedback.get_by_uid(seller_id)
     #print(reviews, file=sys.stderr)
 
+    #Aggregate number of reviews for this seller
+    num_reviews = SellerFeedback.get_num_reviews(seller_id)
+
     #Get associated seller products
     userinfo = User2.get(seller_id)
     prods = Sellproduct.get_by_seller(seller_id) #prods returns all of the product_ids
@@ -597,4 +644,5 @@ def edit():
                             user = userinfo,
                             products = seller_products,
                             reviews = reviews,
-                            avg = truncate(avg,2))
+                            avg = truncate(avg,2),
+                            num_reviews=num_reviews)
