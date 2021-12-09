@@ -124,6 +124,7 @@ def generate_users(n_users, num_sellers, products, sells_products, orders, n_car
 		new_sell_prod = {}
 		new_sell_prod['seller_id'] = random.choice(seller_list)
 		new_sell_prod['product_id'] = random.choice(product_id_set)
+		new_sell_prod['current'] = True
 		if (new_sell_prod['seller_id'], new_sell_prod['product_id']) not in sell_product_set:
 			sells_product_data.append(new_sell_prod)
 			sell_product_set.add((new_sell_prod['seller_id'], new_sell_prod['product_id']))

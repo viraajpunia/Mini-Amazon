@@ -38,6 +38,7 @@ CREATE TABLE Products (
 CREATE TABLE SellProducts (
     seller_id INT NOT NULL,
     product_id INT NOT NULL,
+    current BOOLEAN DEFAULT TRUE,
     PRIMARY KEY(seller_id, product_id),
     FOREIGN KEY (seller_id) REFERENCES Seller(uid),
     FOREIGN KEY (product_id) REFERENCES Products(product_id)

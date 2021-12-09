@@ -18,6 +18,8 @@ from .models.review import Review
 from .models.sellerfeedback import SellerFeedback
 from .models.addtocart import addtocart
 from .models.seller import Seller
+from .models.sellproduct2 import Sellproduct2
+from .models.sellproductsimple import Sellproductsimple
 
 
 from flask import Blueprint
@@ -91,24 +93,14 @@ def seller(variable):
     if current_user.id in buyer_ids:
         leave_review_seller = True
 
-    prods = Sellproduct.get_by_seller(seller_id) #prods returns all of the product_ids
-
-    seller_products = []
-
-    #Get average rating
-    avg = 0
-
-    for prod in prods:
-        product_id = prod.product_id
-        #print(product_id, file=sys.stderr)
-        product_obj = Product.get(product_id)
-        seller_products.append(product_obj)
-        #print(product_obj, file=sys.stderr)
     
-
+    seller_products = Sellproduct2.get_by_seller(seller_id)
+    seller_past = Sellproduct2.get_by_seller_past(seller_id)
+    
     return render_template('seller.html',
                             user = userinfo,
                             products = seller_products,
+                            pastproducts = seller_past,
                             reviews = reviews,
                             avg = truncate(seller_avg,2),
                             leave_review_seller = leave_review_seller,
@@ -170,24 +162,14 @@ def sellerpublic(variable):
     if current_user.id in buyer_ids:
         leave_review_seller = True
 
-    prods = Sellproduct.get_by_seller(seller_id) #prods returns all of the product_ids
 
-    seller_products = []
-
-    #Get average rating
-    avg = 0
-
-    for prod in prods:
-        product_id = prod.product_id
-        #print(product_id, file=sys.stderr)
-        product_obj = Product.get(product_id)
-        seller_products.append(product_obj)
-        #print(product_obj, file=sys.stderr)
-
+    seller_products = Sellproduct2.get_by_seller(seller_id)
+    seller_past = Sellproduct2.get_by_seller_past(seller_id)
 
     return render_template('sellerpublic.html',
                             user = userinfo,
                             products = seller_products,
+                            pastproducts = seller_past,
                             reviews = reviews,
                             avg = truncate(seller_avg,2),
                             leave_review_seller = leave_review_seller,
@@ -515,8 +497,12 @@ def additem():
     img_link = request.args.get("img_link")
     price = request.args.get("price")
 
-    if len(Product.get_exact_item_name(name)) > 0:
-        Sellproduct.add_sell_item(current_user.id, Product.get_exact_item_id(name)[0])
+    prod_id_from_name = Product.get_exact_item_id(name)
+    if len(prod_id_from_name) > 0:
+        if len(Sellproductsimple.get_specific(current_user.id, prod_id_from_name[0])) == 0:
+            Sellproduct.add_sell_item(current_user.id, prod_id_from_name[0])
+        else:
+            Sellproduct.change_selling_status(current_user.id, prod_id_from_name[0], True)
 
     else:
         total_items = Product.get_all()
@@ -540,24 +526,15 @@ def additem():
 
     #Get associated seller products
     userinfo = User2.get(seller_id)
-    prods = Sellproduct.get_by_seller(seller_id) #prods returns all of the product_ids
 
-    seller_products = []
 
-    #Get average rating
-    avg = 0
-
-    for prod in prods:
-        product_id = prod.product_id
-        #print(product_id, file=sys.stderr)
-        product_obj = Product.get(product_id)
-        seller_products.append(product_obj)
-        #print(product_obj, file=sys.stderr)
-
+    seller_products = Sellproduct2.get_by_seller(seller_id)
+    seller_past = Sellproduct2.get_by_seller_past(seller_id)
 
     return render_template('seller.html',
                             user = userinfo,
                             products = seller_products,
+                            pastproducts = seller_past,
                             reviews = reviews,
                             avg = truncate(seller_avg,2),
                             num_reviews=num_reviews)
@@ -572,7 +549,7 @@ def remove():
     pid = prod_by_name[0].id
 
 
-    Sellproduct.delete_sell_item(current_user.id, pid)
+    Sellproduct.change_selling_status(current_user.id, pid, False)
 
     seller_id = current_user.id
 
@@ -590,23 +567,14 @@ def remove():
 
     #Get associated seller products
     userinfo = User2.get(seller_id)
-    prods = Sellproduct.get_by_seller(seller_id) #prods returns all of the product_ids
 
-    seller_products = []
-
-    #Get average rating
-    avg = 0
-
-    for prod in prods:
-        product_id = prod.product_id
-        #print(product_id, file=sys.stderr)
-        product_obj = Product.get(product_id)
-        seller_products.append(product_obj)
-        #print(product_obj, file=sys.stderr)
+    seller_products = Sellproduct2.get_by_seller(seller_id)
+    seller_past = Sellproduct2.get_by_seller_past(seller_id)
 
     return render_template('seller.html',
                             user = userinfo,
                             products = seller_products,
+                            pastproducts = seller_past,
                             reviews = reviews,
                             avg = truncate(seller_avg,2),
                             num_reviews=num_reviews)
@@ -632,29 +600,20 @@ def edit():
 
     #Get associated seller products
     userinfo = User2.get(seller_id)
-    prods = Sellproduct.get_by_seller(seller_id) #prods returns all of the product_ids
-
-    seller_products = []
 
     #Get average rating
     seller_avg = 0
     if int(num_reviews) != 0:
         seller_avg = SellerFeedback.get_avg_rating(seller_id)
 
-    #Get average rating
-    avg = 0
 
-    for prod in prods:
-        product_id = prod.product_id
-        #print(product_id, file=sys.stderr)
-        product_obj = Product.get(product_id)
-        seller_products.append(product_obj)
-        #print(product_obj, file=sys.stderr)
-
+    seller_products = Sellproduct2.get_by_seller(seller_id)
+    seller_past = Sellproduct2.get_by_seller_past(seller_id)
 
     return render_template('seller.html',
                             user = userinfo,
                             products = seller_products,
+                            pastproducts = seller_past,
                             reviews = reviews,
                             avg = truncate(seller_avg,2),
                             num_reviews=num_reviews)

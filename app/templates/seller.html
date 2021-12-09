@@ -81,7 +81,7 @@
       <br />
       <br />
       
-      <h3>Selling</h3>
+      <h3> Currently Selling</h3>
       <br />
 
     <table class='table table-hover table-bordered container' style = "width: 80%">
@@ -96,7 +96,7 @@
               <div class="column" style="width: 60%; display: inline-block;">
                 <div style="display: block">
                   <p style="font-size: 18px; font-weight: bold; text-align: left; float: left; width: 100%">
-                    {{product.name}} 
+                    {{product.name}}
                   </p>
                 </div>
                 <div style="display: block">
@@ -116,6 +116,50 @@
                   </p>
                   <p style = "text-align: center; font-size: 15px; position: relative; top: 70%;">
                     <a href="{{ url_for('index.moreInfo', variable=product.id) }}">More Info</a>
+                  </p>
+                </div>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h3> Sold Before</h3>
+      <br />
+
+    <table class='table table-hover table-bordered container' style = "width: 80%">
+      <tbody>
+        {% for pproduct in pastproducts%}
+          <tr style= "height: 150px">
+            <td>
+              <div class="column" style="width: 20%; display: inline-flex; margin-right: 20px">
+                <img src={{pproduct.img_link}} alt="random image" style="object-position: center center; object-fit: cover; max-width: 100%; min-width: 80px; min-height: 100px; max-height: 130px; margin: auto;">
+              </div>
+    
+              <div class="column" style="width: 60%; display: inline-block;">
+                <div style="display: block">
+                  <p style="font-size: 18px; font-weight: bold; text-align: left; float: left; width: 100%">
+                    {{pproduct.name}}
+                  </p>
+                </div>
+                <div style="display: block">
+                  <p style="font-size: 16px; font-weight: normal; text-align: left; float: left;">
+                    {{pproduct.descrip}}
+                  </p>
+                </div>
+              </div>
+    
+              <div class="column" style="width: 15%; display: inline-block;">
+                <div style="width: 80px; height: 80px; margin-bottom: 60px; background-color: #D6E5E3; display: inline-block; float: right">
+                  <p style="text-align: center; font-size: 13px; position: relative; top: 40%;"> 
+                    ${{pproduct.price}} 
+                  </p>
+                  <p style="text-align: center; font-size: 13px; position: relative; top: 80%;"> 
+                    Category: {{pproduct.category}} 
+                  </p>
+                  <p style = "text-align: center; font-size: 15px; position: relative; top: 70%;">
+                    <a href="{{ url_for('index.moreInfo', variable=pproduct.id) }}">More Info</a>
                   </p>
                 </div>
               </div>
